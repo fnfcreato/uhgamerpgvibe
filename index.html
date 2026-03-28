@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sword of Stability</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="mobileControls" data-context="exploration" aria-hidden="true">
+        <div class="mobile-group mobile-dpad">
+            <button class="mobile-btn up" type="button" data-action="moveUp" aria-label="Move up">UP</button>
+            <button class="mobile-btn left" type="button" data-action="moveLeft" aria-label="Move left">LT</button>
+            <button class="mobile-btn right" type="button" data-action="moveRight" aria-label="Move right">RT</button>
+            <button class="mobile-btn down" type="button" data-action="moveDown" aria-label="Move down">DN</button>
+        </div>
+
+        <div class="mobile-group mobile-actions">
+            <button class="mobile-btn" type="button" data-action="confirm" aria-label="Confirm">OK</button>
+            <button class="mobile-btn only-exploration" type="button" data-action="interact" aria-label="Interact">USE</button>
+            <button class="mobile-btn" type="button" data-action="cancel" aria-label="Cancel">BACK</button>
+            <button class="mobile-btn" type="button" data-action="pause" aria-label="Pause menu">MENU</button>
+        </div>
+
+        <div class="mobile-group mobile-dodge only-battle">
+            <button class="mobile-btn" type="button" data-key="KeyW" aria-label="Dodge W">W</button>
+            <button class="mobile-btn" type="button" data-key="KeyA" aria-label="Dodge A">A</button>
+            <button class="mobile-btn" type="button" data-key="KeyS" aria-label="Dodge S">S</button>
+            <button class="mobile-btn" type="button" data-key="KeyD" aria-label="Dodge D">D</button>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

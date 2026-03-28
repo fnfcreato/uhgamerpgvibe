@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --mobile-btn-size: clamp(48px, 14vw, 64px);
+    --mobile-gap: clamp(8px, 2vw, 12px);
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+body {
+    position: relative;
+    font-family: monospace;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#gameCanvas {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    cursor: default;
+    touch-action: none;
+}
+
+#mobileControls {
+    position: fixed;
+    inset: 0;
+    display: none;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.mobile-group {
+    position: absolute;
+    pointer-events: none;
+}
+
+.mobile-btn {
+    width: var(--mobile-btn-size);
+    height: var(--mobile-btn-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 14px;
+    background: rgba(15, 18, 24, 0.8);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    font: 700 14px/1 monospace;
+    letter-spacing: 0.08em;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-btn.is-active {
+    transform: scale(0.96);
+    background: rgba(60, 78, 112, 0.9);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.mobile-dpad {
+    left: calc(env(safe-area-inset-left) + 12px);
+    bottom: calc(env(safe-area-inset-bottom) + 12px);
+    width: calc(var(--mobile-btn-size) * 3 + var(--mobile-gap) * 2);
+    height: calc(var(--mobile-btn-size) * 3 + var(--mobile-gap) * 2);
+}
+
+.mobile-dpad .up {
+    position: absolute;
+    left: calc(var(--mobile-btn-size) + var(--mobile-gap));
+    top: 0;
+}
+
+.mobile-dpad .left {
+    position: absolute;
+    left: 0;
+    top: calc(var(--mobile-btn-size) + var(--mobile-gap));
+}
+
+.mobile-dpad .right {
+    position: absolute;
+    right: 0;
+    top: calc(var(--mobile-btn-size) + var(--mobile-gap));
+}
+
+.mobile-dpad .down {
+    position: absolute;
+    left: calc(var(--mobile-btn-size) + var(--mobile-gap));
+    bottom: 0;
+}
+
+.mobile-actions {
+    right: calc(env(safe-area-inset-right) + 12px);
+    bottom: calc(env(safe-area-inset-bottom) + 12px);
+    display: grid;
+    grid-template-columns: repeat(2, var(--mobile-btn-size));
+    gap: var(--mobile-gap);
+}
+
+.mobile-dodge {
+    right: calc(env(safe-area-inset-right) + 12px);
+    top: calc(env(safe-area-inset-top) + 12px);
+    display: grid;
+    grid-template-columns: repeat(2, var(--mobile-btn-size));
+    gap: var(--mobile-gap);
+}
+
+#mobileControls[data-context="exploration"] .only-battle {
+    display: none;
+}
+
+#mobileControls[data-context="battle"] .only-exploration,
+#mobileControls[data-context="battle"] .mobile-dpad {
+    display: none;
+}
+
+#mobileControls[data-context="menu"] .only-exploration,
+#mobileControls[data-context="menu"] .only-battle,
+#mobileControls[data-context="inventory"] .only-exploration,
+#mobileControls[data-context="inventory"] .only-battle {
+    display: none;
+}
+
+@media (pointer: coarse), (hover: none) {
+    #mobileControls {
+        display: block;
+    }
+}
+
+@media (pointer: coarse) and (orientation: portrait), (hover: none) and (orientation: portrait) {
+    #gameCanvas {
+        top: 38%;
+    }
+}

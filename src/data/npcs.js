@@ -1,0 +1,23 @@
+export const NPC_DEFS = {
+    elder: { id: 'elder', name: 'Elder', dialogueId: 'elder_intro', sprite: null },
+    guard: { id: 'guard', name: 'Guard', dialogueId: 'guard_info', sprite: null },
+    blacksmith: {
+        id: 'blacksmith',
+        name: 'Blacksmith',
+        dialogueId: 'blacksmith_shop',
+        shopId: 'blacksmith_forge',
+        sprite: null,
+    },
+    herbalist: {
+        id: 'herbalist',
+        name: 'Herbalist',
+        dialogueId: 'herbalist_cache',
+        shopId: 'survivor_cache',
+        sprite: null,
+    },
+    pilgrim: { id: 'pilgrim', name: 'Pilgrim', dialogueId: 'pilgrim_warning', sprite: null },
+    sentinel: { id: 'sentinel', name: 'Sentinel', dialogueId: 'sentinel_laststand', sprite: null },
+    scavenger: { id: 'scavenger', name: 'Scavenger', dialogueId: 'scavenger_rumors', sprite: null },
+    watcher: { id: 'watcher', name: 'Watcher', dialogueId: 'watcher_warning', sprite: null },
+    keeper: { id: 'keeper', name: 'Keeper', dialogueId: 'refuge_keeper', sprite: null },
+};
