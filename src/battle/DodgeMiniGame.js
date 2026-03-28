@@ -9,6 +9,12 @@ const POSITION_POOL = [
     { x: 256, y: 108 },
 ];
 
+const DODGE_RING_START_RADIUS = 34;
+const DODGE_TARGET_RADIUS = 14;
+const DODGE_EARLY_WINDOW = 8;
+const DODGE_LATE_WINDOW = 3;
+const DODGE_SPEED_SCALE = 0.78;
+
 export class DodgeMiniGame {
     constructor(pattern, centerX, centerY) {
         this._centerX = centerX;
@@ -22,9 +28,10 @@ export class DodgeMiniGame {
                 speed: p.speed || 1.0,
                 x: position.x,
                 y: position.y,
-                ringRadius: 30,
-                targetRadius: 14,
-                greenZone: 4,
+                ringRadius: DODGE_RING_START_RADIUS,
+                targetRadius: DODGE_TARGET_RADIUS,
+                earlyWindow: DODGE_EARLY_WINDOW,
+                lateWindow: DODGE_LATE_WINDOW,
                 state: 'waiting',
                 resultTimer: 0,
                 resultLabel: '',
@@ -45,8 +52,9 @@ export class DodgeMiniGame {
         if (circle.state !== 'active') return;
 
         const diff = circle.ringRadius - circle.targetRadius;
+        const inWindow = diff >= -circle.lateWindow && diff <= circle.earlyWindow;
 
-        if (keyCode === circle.key && diff >= 0 && diff <= circle.greenZone) {
+        if (keyCode === circle.key && inWindow) {
             circle.state = 'dodged';
             circle.resultLabel = 'DODGED!';
         } else if (keyCode !== circle.key) {
@@ -68,9 +76,9 @@ export class DodgeMiniGame {
         const circle = this._circles[this._currentIndex];
 
         if (circle.state === 'active') {
-            circle.ringRadius -= circle.speed * 36 * dt;
+            circle.ringRadius -= circle.speed * 36 * DODGE_SPEED_SCALE * dt;
 
-            if (circle.ringRadius < circle.targetRadius - 1) {
+            if (circle.ringRadius < circle.targetRadius - circle.lateWindow) {
                 circle.state = 'hit';
                 circle.resultLabel = 'TOO LATE!';
                 circle.resultTimer = 0.45;
@@ -118,10 +126,16 @@ export class DodgeMiniGame {
         ctx.arc(cx, cy, tr, 0, Math.PI * 2);
         ctx.stroke();
 
+        ctx.fillStyle = 'rgba(80, 220, 120, 0.18)';
+        ctx.beginPath();
+        ctx.arc(cx, cy, tr + circle.earlyWindow, 0, Math.PI * 2);
+        ctx.arc(cx, cy, Math.max(1, tr - circle.lateWindow), 0, Math.PI * 2, true);
+        ctx.fill();
+
         ctx.strokeStyle = '#4a4';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(cx, cy, tr + circle.greenZone / 2, 0, Math.PI * 2);
+        ctx.arc(cx, cy, tr + circle.earlyWindow, 0, Math.PI * 2);
         ctx.stroke();
 
         ctx.fillStyle = '#fff';
@@ -132,7 +146,7 @@ export class DodgeMiniGame {
 
         if (circle.state === 'active') {
             const diff = circle.ringRadius - tr;
-            const inGreen = diff >= 0 && diff <= circle.greenZone;
+            const inGreen = diff >= -circle.lateWindow && diff <= circle.earlyWindow;
 
             ctx.strokeStyle = inGreen ? '#4f4' : '#f84';
             ctx.lineWidth = 3;

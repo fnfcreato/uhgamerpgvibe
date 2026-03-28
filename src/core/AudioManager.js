@@ -1,7 +1,7 @@
 export class AudioManager {
     constructor(settingsState) {
         this._settings = settingsState;
-        this._bgmElement = null;
+        this._bgmElement = typeof Audio === 'undefined' ? null : new Audio();
         this._currentBGMId = null;
         this._bgmTracks = new Map();
         this._sfxTracks = new Map();
@@ -9,6 +9,13 @@ export class AudioManager {
         this._unlocked = typeof window === 'undefined';
         this._unlockHandler = null;
         this._audioContext = null;
+
+        if (this._bgmElement) {
+            this._bgmElement.preload = 'auto';
+            this._bgmElement.loop = true;
+            this._bgmElement.volume = this._settings.bgmVolume;
+            this._bgmElement.playsInline = true;
+        }
 
         this._bindUnlockEvents();
     }
@@ -63,15 +70,8 @@ export class AudioManager {
     }
 
     registerBGM(id, src) {
-        const audio = new Audio();
-        audio.src = src;
-        audio.preload = 'auto';
-        audio.loop = true;
-        audio.volume = this._settings.bgmVolume;
-        audio.playsInline = true;
-        this._bgmTracks.set(id, audio);
-
-        return audio;
+        this._bgmTracks.set(id, src);
+        return src;
     }
 
     registerSFX(id, src) {
@@ -99,7 +99,7 @@ export class AudioManager {
 
     _playAudio(audio, { restart = false } = {}) {
         if (!audio) {
-            return Promise.resolve();
+            return Promise.resolve(false);
         }
 
         audio.volume = this._settings.bgmVolume;
@@ -108,45 +108,32 @@ export class AudioManager {
         }
 
         const playPromise = audio.play();
-        if (playPromise && typeof playPromise.catch === 'function') {
-            return playPromise.catch(() => {});
+        if (playPromise && typeof playPromise.then === 'function') {
+            return playPromise.then(() => true).catch(() => false);
         }
 
-        return Promise.resolve();
+        return Promise.resolve(true);
     }
 
     playBGM(id, { restart = false } = {}) {
-        const audio = this._bgmTracks.get(id);
-        if (!audio) {
-            return Promise.resolve();
+        const src = this._bgmTracks.get(id);
+        if (!src || !this._bgmElement) {
+            return Promise.resolve(false);
         }
 
-        if (this._currentBGMId === id && this._bgmElement === audio) {
-            if (restart) {
-                audio.currentTime = 0;
-            }
-
-            if (!this._unlocked) {
-                this._pendingBGMAction = { type: 'resume' };
-                return Promise.resolve();
-            }
-
-            return audio.paused ? this._playAudio(audio) : Promise.resolve();
-        }
-
-        if (this._bgmElement && this._bgmElement !== audio) {
+        const isTrackChange = this._currentBGMId !== id;
+        if (isTrackChange) {
             this._bgmElement.pause();
+            this._bgmElement.src = src;
+            this._currentBGMId = id;
         }
-
-        this._bgmElement = audio;
-        this._currentBGMId = id;
 
         if (!this._unlocked) {
             this._pendingBGMAction = { type: 'play', id, restart };
-            return Promise.resolve();
+            return Promise.resolve(false);
         }
 
-        return this._playAudio(audio, { restart });
+        return this._playAudio(this._bgmElement, { restart: restart || isTrackChange });
     }
 
     pauseBGM() {
@@ -158,7 +145,7 @@ export class AudioManager {
     }
 
     resumeBGM() {
-        if (!this._bgmElement) {
+        if (!this._bgmElement || !this._currentBGMId) {
             return Promise.resolve();
         }
 
@@ -174,9 +161,10 @@ export class AudioManager {
         if (this._bgmElement) {
             this._bgmElement.pause();
             this._bgmElement.currentTime = 0;
+            this._bgmElement.removeAttribute('src');
+            this._bgmElement.load();
         }
 
-        this._bgmElement = null;
         this._currentBGMId = null;
         this._pendingBGMAction = null;
     }
@@ -243,7 +231,7 @@ export class AudioManager {
 
         const registeredSrc = this._sfxTracks.get(idOrSrc);
         const src = registeredSrc || idOrSrc;
-        if (typeof src === 'string' && (src.includes('/') || src.endsWith('.mp3') || src.endsWith('.wav') || src.endsWith('.ogg'))) {
+        if (typeof src === 'string' && (src.startsWith('assets/') || src.startsWith('./') || src.startsWith('../') || src.startsWith('http://') || src.startsWith('https://') || src.endsWith('.mp3') || src.endsWith('.wav') || src.endsWith('.ogg'))) {
             const sfx = new Audio(src);
             sfx.preload = 'auto';
             sfx.volume = this._settings.sfxVolume;
@@ -276,5 +264,13 @@ export class AudioManager {
 
     getCurrentBGMId() {
         return this._currentBGMId;
+    }
+
+    isBGMPlaying(id = null) {
+        if (!this._bgmElement || this._bgmElement.paused) {
+            return false;
+        }
+
+        return id ? this._currentBGMId === id : true;
     }
 }

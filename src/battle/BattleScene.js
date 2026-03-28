@@ -40,6 +40,10 @@ export class BattleScene {
         this._victoryHandled = false;
         this._victorySummary = null;
         this._enemyDeathProgress = 0;
+        this._battleBgmId = this.callbacks.battleBgmId || null;
+        this._returnBgmId = null;
+        this._battleBgmRetryWindow = 0;
+        this._battleBgmRetryTimer = 0;
 
         const btnW = 60;
         const btnH = 16;
@@ -64,11 +68,26 @@ export class BattleScene {
 
     onEnter() {
         this.context.input.setContext('battle');
+        this._returnBgmId = this.context.audio.getCurrentBGMId();
+
+        if (this._battleBgmId) {
+            this._battleBgmRetryWindow = 1.2;
+            this._battleBgmRetryTimer = 0;
+            this.context.audio.playBGM(this._battleBgmId, { restart: true });
+            return;
+        }
+
         this.context.audio.pauseBGM();
     }
 
     onExit() {
         this.context.input.setContext('exploration');
+
+        if (this._battleBgmId && this._returnBgmId) {
+            this.context.audio.playBGM(this._returnBgmId);
+            return;
+        }
+
         this.context.audio.resumeBGM();
     }
 
@@ -247,6 +266,17 @@ export class BattleScene {
 
     update(dt) {
         this._updateActionButtons();
+
+        if (this._battleBgmId && this._battleBgmRetryWindow > 0) {
+            this._battleBgmRetryWindow -= dt;
+            this._battleBgmRetryTimer -= dt;
+
+            if (!this.context.audio.isBGMPlaying(this._battleBgmId) && this._battleBgmRetryTimer <= 0) {
+                this.context.audio.playBGM(this._battleBgmId);
+                this._battleBgmRetryTimer = 0.2;
+            }
+        }
+
         this.flow.update(dt);
 
         if (this.flow.state === BattleState.SWORD_SELECT && this._prevState !== BattleState.SWORD_SELECT) {

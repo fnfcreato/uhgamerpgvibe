@@ -4,6 +4,7 @@ export const AREA_DEFS = {
         name: 'Town of Robloxia',
         mapFile: 'testMap',
         bgm: 'town',
+        battleBgm: 'battle_town',
         enemySpawns: [
             { spawnId: 'town_slime_1', enemyDefId: 'slime', x: 280, y: 200 },
             { spawnId: 'town_skel_1', enemyDefId: 'skeleton', x: 500, y: 280 },
@@ -26,7 +27,8 @@ export const AREA_DEFS = {
         id: 'corrupted_zone_1',
         name: 'Corrupted Zone I',
         mapFile: 'corruptedZone1',
-        bgm: 'town',
+        bgm: 'corruption',
+        battleBgm: 'battle_corruption',
         enemySpawns: [
             { spawnId: 'z1_wisp_1', enemyDefId: 'shadow_wisp', x: 200, y: 200 },
             { spawnId: 'z1_wisp_2', enemyDefId: 'shadow_wisp', x: 400, y: 350 },
@@ -53,7 +55,8 @@ export const AREA_DEFS = {
         id: 'corrupted_zone_2',
         name: 'Corrupted Zone II',
         mapFile: 'corruptedZone2',
-        bgm: 'town',
+        bgm: 'corruption',
+        battleBgm: 'battle_corruption',
         enemySpawns: [
             { spawnId: 'z2_crawler_1', enemyDefId: 'void_crawler', x: 200, y: 200 },
             { spawnId: 'z2_crawler_2', enemyDefId: 'void_crawler', x: 500, y: 300 },
@@ -79,7 +82,8 @@ export const AREA_DEFS = {
         id: 'corrupted_zone_3',
         name: 'Corrupted Zone III',
         mapFile: 'corruptedZone3',
-        bgm: 'town',
+        bgm: 'corruption',
+        battleBgm: 'battle_corruption',
         enemySpawns: [
             { spawnId: 'z3_beast_1', enemyDefId: 'corruption_beast', x: 250, y: 250 },
             { spawnId: 'z3_beast_2', enemyDefId: 'corruption_beast', x: 550, y: 400 },
@@ -105,7 +109,8 @@ export const AREA_DEFS = {
         id: 'final_arena',
         name: 'Final Arena',
         mapFile: 'finalArena',
-        bgm: 'town',
+        bgm: 'corruption',
+        battleBgm: 'battle_corruption',
         enemySpawns: [
             { spawnId: 'final_beast_1', enemyDefId: 'corruption_beast', x: 190, y: 150 },
             { spawnId: 'final_shade_1', enemyDefId: 'nightmare_shade', x: 280, y: 150 },

@@ -2,8 +2,12 @@ import { Game } from './core/Game.js';
 import { ExplorationScene } from './world/ExplorationScene.js';
 import { HUD } from './ui/HUD.js';
 
-const MAP_BGM_ID = 'town';
-const MAP_BGM_SRC = 'assets/audio/bgm/PixelDreamsOrangeOrchestralTimpani071544.mp3';
+const BGM_TRACKS = {
+    town: new URL('../assets/audio/bgm/PixelDreamsOrangeOrchestralTimpani071544.mp3', import.meta.url).href,
+    corruption: new URL('../assets/audio/bgm/corruptedMap.mp3', import.meta.url).href,
+    battle_town: new URL('../assets/audio/bgm/battle.mp3', import.meta.url).href,
+    battle_corruption: new URL('../assets/audio/bgm/battlecorruption.mp3', import.meta.url).href,
+};
 
 function showFatalError(error) {
     const existing = document.getElementById('fatalErrorOverlay');
@@ -38,7 +42,10 @@ window.addEventListener('unhandledrejection', (event) => {
 try {
     const canvas = document.getElementById('gameCanvas');
     const game = new Game(canvas);
-    game.context.audio.registerBGM(MAP_BGM_ID, MAP_BGM_SRC);
+
+    Object.entries(BGM_TRACKS).forEach(([id, src]) => {
+        game.context.audio.registerBGM(id, src);
+    });
 
     const rustyBlade = game.context.inventory.addItem('rusty_blade', 'sword');
     const swiftEdge = game.context.inventory.addItem('swift_edge', 'sword');

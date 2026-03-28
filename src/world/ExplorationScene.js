@@ -352,7 +352,9 @@ export class ExplorationScene {
         this._inBattle = true;
         this.player.setMovement(0, 0);
 
+        const areaDef = AREA_DEFS[this._areaId];
         const battleScene = new BattleScene(this.context, enemy.def, {
+            battleBgmId: areaDef?.battleBgm || null,
             onVictory: () => {
                 enemy.active = false;
                 this.context.quests.markEnemyDefeated(enemy.spawnId);
