@@ -6,11 +6,15 @@ import { CORRUPTED_ZONE_1_MAP } from '../data/maps/corruptedZone1.js';
 import { CORRUPTED_ZONE_2_MAP } from '../data/maps/corruptedZone2.js';
 import { CORRUPTED_ZONE_3_MAP } from '../data/maps/corruptedZone3.js';
 import { FINAL_ARENA_MAP } from '../data/maps/finalArena.js';
+import { FROZEN_PASS_MAP } from '../data/maps/frozenPass.js';
+import { GLACIER_CAVERN_MAP } from '../data/maps/glacierCavern.js';
 import { Enemy } from './Enemy.js';
 import { NPC } from './NPC.js';
 
 const MAP_DATA = {
     testMap: TEST_MAP,
+    frozenPass: FROZEN_PASS_MAP,
+    glacierCavern: GLACIER_CAVERN_MAP,
     corruptedZone1: CORRUPTED_ZONE_1_MAP,
     corruptedZone2: CORRUPTED_ZONE_2_MAP,
     corruptedZone3: CORRUPTED_ZONE_3_MAP,

@@ -1,28 +1,34 @@
 import { CANVAS } from '../data/constants.js';
 
 const TILE_COLORS = {
-    1: '#3a6e3a',  // grass
-    2: '#555555',  // stone wall
-    3: '#8b7a4a',  // dirt path
-    4: '#2d5a2d',  // dark grass
-    5: '#6a6a6a',  // light stone
-    6: '#4a7a4a',  // grass variant
-    10: '#3a1a3a', // corrupted ground
-    11: '#4a2a4a', // corrupted wall
-    12: '#5a3a4a', // corrupted path
-    13: '#2a0a2a', // deep corruption
-    14: '#3a1a1a', // arena floor
-    15: '#5a2a2a', // arena wall
+    1: '#3a6e3a',
+    2: '#555555',
+    3: '#8b7a4a',
+    4: '#2d5a2d',
+    5: '#6a6a6a',
+    6: '#4a7a4a',
+    10: '#3a1a3a',
+    11: '#4a2a4a',
+    12: '#5a3a4a',
+    13: '#2a0a2a',
+    14: '#3a1a1a',
+    15: '#5a2a2a',
+    20: '#c7ebff',
+    21: '#8ba8c9',
+    22: '#e8f7ff',
+    23: '#8fd3ff',
+    24: '#f8fcff',
+    25: '#d8fbff',
 };
 
 const WALL_TOP_COLOR = '#444444';
 const WALL_FACE_COLOR = '#333333';
-
 const CORRUPTED_WALL_TOP_COLOR = '#3a1a3a';
 const CORRUPTED_WALL_FACE_COLOR = '#2a0a2a';
-
 const ARENA_WALL_TOP_COLOR = '#4a1a1a';
 const ARENA_WALL_FACE_COLOR = '#3a0a0a';
+const ICE_WALL_TOP_COLOR = '#b8d8f8';
+const ICE_WALL_FACE_COLOR = '#87afd6';
 
 export class TileRenderer {
     render(ctx, tileMap, camera) {
@@ -64,6 +70,11 @@ export class TileRenderer {
                         ctx.fillRect(screen.x, screen.y, ts, ts - 4);
                         ctx.fillStyle = ARENA_WALL_FACE_COLOR;
                         ctx.fillRect(screen.x, screen.y + ts - 4, ts, 4);
+                    } else if (tileId === 21) {
+                        ctx.fillStyle = ICE_WALL_TOP_COLOR;
+                        ctx.fillRect(screen.x, screen.y, ts, ts - 4);
+                        ctx.fillStyle = ICE_WALL_FACE_COLOR;
+                        ctx.fillRect(screen.x, screen.y + ts - 4, ts, 4);
                     } else {
                         ctx.fillStyle = TILE_COLORS[tileId] || '#ff00ff';
                         ctx.fillRect(screen.x, screen.y, ts, ts);
@@ -81,6 +92,9 @@ export class TileRenderer {
             10: '#8f4d8f',
             12: '#b07bd2',
             13: '#d05b8e',
+            22: '#f7fdff',
+            24: '#ffffff',
+            25: '#c7fbff',
         };
 
         const color = colors[tileId] || TILE_COLORS[tileId] || '#ff00ff';
@@ -108,6 +122,17 @@ export class TileRenderer {
             ctx.fillStyle = '#12050f';
             ctx.globalAlpha = 0.9;
             ctx.fillRect(x + 6, y + 6, ts - 12, ts - 12);
+        } else if (tileId === 22 || tileId === 24) {
+            ctx.globalAlpha = 0.9;
+            ctx.fillRect(x + 2, y + 2, ts - 4, ts - 4);
+            ctx.fillStyle = 'rgba(180, 240, 255, 0.9)';
+            ctx.fillRect(x + 5, y + 4, 2, ts - 8);
+            ctx.fillRect(x + 9, y + 3, 2, ts - 6);
+        } else if (tileId === 25) {
+            ctx.globalAlpha = 0.95;
+            ctx.fillRect(x + 7, y + 2, 2, ts - 4);
+            ctx.fillRect(x + 3, y + 7, ts - 6, 2);
+            ctx.fillRect(x + 5, y + 5, 6, 6);
         } else {
             ctx.globalAlpha = 0.8;
             ctx.fillRect(x + 3, y + 3, ts - 6, ts - 6);

@@ -6,6 +6,7 @@ export class EnemyBattle {
         this.hp = def.hp;
         this.damage = def.damage;
         this.dodgePatterns = def.dodgePatterns || [];
+        this.attackStatusEffects = def.attackStatusEffects || [];
         this.animator = null;
     }
 

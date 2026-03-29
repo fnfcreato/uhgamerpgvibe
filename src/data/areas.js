@@ -17,10 +17,58 @@ export const AREA_DEFS = {
         ],
         exits: [
             { x: 784, y: 304, w: 16, h: 32, targetAreaId: 'corrupted_zone_1', targetSpawnX: 40, targetSpawnY: 272 },
+            { x: 368, y: 32, w: 64, h: 16, targetAreaId: 'frozen_pass', targetSpawnX: 352, targetSpawnY: 496 },
         ],
         gateConditions: [],
         corruptionProfile: null,
         sanctuaries: [],
+        clearQuestId: null,
+    },
+    frozen_pass: {
+        id: 'frozen_pass',
+        name: 'Frozen Pass',
+        mapFile: 'frozenPass',
+        bgm: 'town',
+        battleBgm: 'battle_town',
+        enemySpawns: [
+            { spawnId: 'ice_pass_wolf_1', enemyDefId: 'frost_wolf', x: 196, y: 180 },
+            { spawnId: 'ice_pass_wolf_2', enemyDefId: 'frost_wolf', x: 540, y: 170 },
+            { spawnId: 'ice_pass_spider_1', enemyDefId: 'ice_spider', x: 248, y: 376 },
+            { spawnId: 'ice_pass_spider_2', enemyDefId: 'ice_spider', x: 520, y: 408 },
+        ],
+        npcSpawns: [],
+        exits: [
+            { x: 320, y: 528, w: 80, h: 32, targetAreaId: 'town_of_robloxia', targetSpawnX: 400, targetSpawnY: 64 },
+            { x: 688, y: 240, w: 32, h: 64, targetAreaId: 'glacier_cavern', targetSpawnX: 48, targetSpawnY: 256 },
+        ],
+        gateConditions: [],
+        corruptionProfile: null,
+        sanctuaries: [
+            { x: 96, y: 368, w: 80, h: 80 },
+        ],
+        clearQuestId: null,
+    },
+    glacier_cavern: {
+        id: 'glacier_cavern',
+        name: 'Glacier Cavern',
+        mapFile: 'glacierCavern',
+        bgm: 'town',
+        battleBgm: 'battle_town',
+        enemySpawns: [
+            { spawnId: 'cavern_spider_1', enemyDefId: 'ice_spider', x: 184, y: 104 },
+            { spawnId: 'cavern_shaman_1', enemyDefId: 'ice_shaman', x: 424, y: 136 },
+            { spawnId: 'cavern_spider_2', enemyDefId: 'ice_spider', x: 264, y: 376 },
+            { spawnId: 'cavern_shaman_2', enemyDefId: 'ice_shaman', x: 504, y: 392 },
+        ],
+        npcSpawns: [],
+        exits: [
+            { x: 0, y: 224, w: 16, h: 64, targetAreaId: 'frozen_pass', targetSpawnX: 664, targetSpawnY: 272 },
+        ],
+        gateConditions: [],
+        corruptionProfile: null,
+        sanctuaries: [
+            { x: 176, y: 352, w: 64, h: 64 },
+        ],
         clearQuestId: null,
     },
     corrupted_zone_1: {

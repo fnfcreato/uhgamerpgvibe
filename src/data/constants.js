@@ -26,3 +26,22 @@ export const DAMAGE = {
     SOUL_STABLE_DEFENSE_BONUS: 0.1,
     SOUL_LOW_DEFENSE_PENALTY: 0.18,
 };
+
+export const STATUS_EFFECTS = {
+    poisoned: {
+        id: 'poisoned',
+        shortLabel: 'PSN',
+        label: 'Poisoned',
+        color: '#8ce062',
+        defaultTurns: 3,
+        defaultDamage: 4,
+    },
+    frozen: {
+        id: 'frozen',
+        shortLabel: 'FRZ',
+        label: 'Frozen',
+        color: '#8fe8ff',
+        defaultTurns: 1,
+        defaultDamage: 0,
+    },
+};

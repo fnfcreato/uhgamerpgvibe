@@ -10,6 +10,7 @@ import { SHIELD_DEFS } from '../data/shields.js';
 import { CONSUMABLE_DEFS } from '../data/consumables.js';
 import { CANVAS } from '../data/constants.js';
 import { PixelText } from '../rendering/PixelText.js';
+import { StatusEffectSystem } from './StatusEffectSystem.js';
 
 const W = CANVAS.INTERNAL_WIDTH;
 const H = CANVAS.INTERNAL_HEIGHT;
@@ -404,6 +405,7 @@ export class BattleScene {
         ctx.fillText(`HP ${player.hp}/${player.maxHp}`, 10, H - 30);
 
         this._drawShieldStatus(ctx, 100, H - 31);
+        this._drawStatusEffects(ctx, 10, H - 44);
 
         this._drawHPBar(ctx, W - 90, 8, 80, 8, this.enemy.hp, this.enemy.maxHp, '#e44');
         ctx.fillStyle = '#fff';
@@ -645,6 +647,27 @@ export class BattleScene {
         ctx.strokeStyle = '#555';
         ctx.lineWidth = 1;
         ctx.strokeRect(x + 0.5, y + 0.5, width - 1, height - 1);
+    }
+
+    _drawStatusEffects(ctx, x, y) {
+        const entries = StatusEffectSystem.getDisplayData(this.context.state.player);
+        if (entries.length === 0) {
+            return;
+        }
+
+        let offsetX = x;
+        for (const entry of entries.slice(0, 4)) {
+            ctx.fillStyle = 'rgba(6, 10, 16, 0.9)';
+            ctx.fillRect(offsetX, y, 40, 12);
+            ctx.strokeStyle = entry.color;
+            ctx.strokeRect(offsetX + 0.5, y + 0.5, 39, 11);
+            ctx.fillStyle = entry.color;
+            ctx.font = '8px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`${entry.shortLabel} ${entry.turns}`, offsetX + 4, y + 2);
+            offsetX += 44;
+        }
     }
 
     _drawShieldStatus(ctx, x, y) {

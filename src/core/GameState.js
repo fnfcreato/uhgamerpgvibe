@@ -7,6 +7,7 @@ export class PlayerState {
         this.position = { x: 160, y: 90 };
         this.equippedSwords = [null, null];
         this.equippedShield = null;
+        this.statusEffects = [];
     }
 }
 
@@ -41,7 +42,7 @@ export class SettingsState {
     constructor() {
         this.bgmVolume = 0.7;
         this.sfxVolume = 1.0;
-        this.saveVersion = 2;
+        this.saveVersion = 3;
     }
 }
 

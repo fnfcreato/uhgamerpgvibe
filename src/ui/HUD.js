@@ -2,6 +2,7 @@ import { SceneType } from '../core/SceneManager.js';
 import { PixelText } from '../rendering/PixelText.js';
 import { SWORD_DEFS } from '../data/swords.js';
 import { SHIELD_DEFS } from '../data/shields.js';
+import { StatusEffectSystem } from '../battle/StatusEffectSystem.js';
 
 export class HUD {
     constructor(context) {
@@ -16,6 +17,7 @@ export class HUD {
         const swordA = player.equippedSwords[0] ? SWORD_DEFS[player.equippedSwords[0].defId] : null;
         const swordB = player.equippedSwords[1] ? SWORD_DEFS[player.equippedSwords[1].defId] : null;
         const shieldDef = player.equippedShield ? SHIELD_DEFS[player.equippedShield.defId] : null;
+        const statusEntries = StatusEffectSystem.getDisplayData(player);
 
         ctx.save();
         ctx.fillStyle = 'rgba(8, 12, 20, 0.76)';
@@ -41,7 +43,28 @@ export class HUD {
             ? `SH ${shieldDef.name} ${player.equippedShield.currentDurability}/${shieldDef.maxDurability}`
             : 'SH --';
         PixelText.draw(ctx, this._fitLine(ctx, shieldText, 150), 158, 31, { color: '#fff' });
+
+        this._drawStatusRow(ctx, statusEntries);
         ctx.restore();
+    }
+
+    _drawStatusRow(ctx, statusEntries) {
+        if (statusEntries.length === 0) {
+            return;
+        }
+
+        let x = 8;
+        const y = 52;
+        for (const entry of statusEntries.slice(0, 4)) {
+            ctx.fillStyle = 'rgba(6, 10, 16, 0.88)';
+            ctx.fillRect(x, y, 46, 12);
+            ctx.strokeStyle = entry.color;
+            ctx.strokeRect(x + 0.5, y + 0.5, 45, 11);
+            PixelText.draw(ctx, `${entry.shortLabel} ${entry.turns}`, x + 4, y + 3, {
+                color: entry.color,
+            });
+            x += 50;
+        }
     }
 
     _fitLine(ctx, text, maxWidth) {

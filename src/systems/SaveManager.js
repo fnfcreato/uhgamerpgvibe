@@ -16,6 +16,7 @@ export class SaveManager {
                 position: { x: player.position.x, y: player.position.y },
                 equippedSwords: player.equippedSwords.map((item) => item?.instanceId || null),
                 equippedShield: player.equippedShield?.instanceId || null,
+                statusEffects: (player.statusEffects || []).map((effect) => ({ ...effect })),
             },
             inventory: {
                 items: inventory.items.map((item) => ({ ...item })),
@@ -84,6 +85,7 @@ export class SaveManager {
         player.gold = data.player?.gold ?? player.gold;
         player.position.x = data.player?.position?.x ?? player.position.x;
         player.position.y = data.player?.position?.y ?? player.position.y;
+        player.statusEffects = (data.player?.statusEffects || []).map((effect) => ({ ...effect }));
         player.equippedSwords = inventory.equippedSwords.slice(0, 2);
         while (player.equippedSwords.length < 2) {
             player.equippedSwords.push(null);

@@ -1,5 +1,6 @@
 import { DamageCalculator } from './DamageCalculator.js';
 import { BlockSystem } from './BlockSystem.js';
+import { StatusEffectSystem } from './StatusEffectSystem.js';
 
 export const BattleState = {
     INTRO: 'intro',
@@ -34,6 +35,8 @@ export class BattleFlow {
         this.feedbackTimer = 0;
 
         this._pendingDodgeResult = null;
+        this._pendingTimingMult = 0;
+        this._pendingHitCount = 0;
     }
 
     showFeedback(text) {
@@ -97,7 +100,56 @@ export class BattleFlow {
 
     _showFeedback(text) {
         this.feedbackText = text;
-        this.feedbackTimer = 0.8;
+        this.feedbackTimer = 0.95;
+    }
+
+    _startPlayerTurn() {
+        const statusResult = StatusEffectSystem.onTurnStart(this.playerState);
+        if (statusResult.damage > 0) {
+            this.playerState.hp = Math.max(0, this.playerState.hp - statusResult.damage);
+            this.lastDamageTaken = statusResult.damage;
+        } else {
+            this.lastDamageTaken = 0;
+        }
+
+        if (this.playerState.hp <= 0) {
+            this.state = BattleState.DEFEAT;
+            this._timer = 0;
+            this._showFeedback(statusResult.messages.join(' + ') || 'DEFEAT');
+            return;
+        }
+
+        if (statusResult.skippedTurn) {
+            this.state = BattleState.ENEMY_ATTACK_INTRO;
+            this._timer = 0;
+            this._showFeedback(statusResult.messages.join(' + '));
+            return;
+        }
+
+        this.state = BattleState.PLAYER_TURN;
+        this._timer = 0;
+        if (statusResult.messages.length > 0) {
+            this._showFeedback(statusResult.messages.join(' + '));
+        }
+    }
+
+    _applyAttackStatusEffects(damageTaken) {
+        if (damageTaken <= 0 || !Array.isArray(this.currentEnemy.attackStatusEffects)) {
+            return [];
+        }
+
+        const messages = [];
+        for (const effect of this.currentEnemy.attackStatusEffects) {
+            const chance = effect.chance ?? 1;
+            if (Math.random() > chance) {
+                continue;
+            }
+            const applied = StatusEffectSystem.apply(this.playerState, effect);
+            if (applied) {
+                messages.push(applied);
+            }
+        }
+        return messages;
     }
 
     update(dt) {
@@ -110,8 +162,7 @@ export class BattleFlow {
         switch (this.state) {
             case BattleState.INTRO:
                 if (this._timer >= 1.0) {
-                    this.state = BattleState.PLAYER_TURN;
-                    this._timer = 0;
+                    this._startPlayerTurn();
                 }
                 break;
 
@@ -178,12 +229,18 @@ export class BattleFlow {
                 this.playerState.hp = Math.max(0, this.playerState.hp - dmg);
                 this.lastDamageTaken = dmg;
 
+                const effectMessages = this._applyAttackStatusEffects(dmg);
+                if (effectMessages.length > 0) {
+                    const baseText = this.feedbackText;
+                    this._showFeedback(baseText ? `${baseText} ${effectMessages.join(' ')}` : effectMessages.join(' '));
+                }
+
                 if (this.playerState.hp <= 0) {
                     this.state = BattleState.DEFEAT;
+                    this._timer = 0;
                 } else {
-                    this.state = BattleState.PLAYER_TURN;
+                    this._startPlayerTurn();
                 }
-                this._timer = 0;
                 break;
             }
         }

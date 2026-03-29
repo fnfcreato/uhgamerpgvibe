@@ -406,6 +406,7 @@ export class ExplorationScene {
             onDefeat: () => {
                 this.context.state.player.hp = this.context.state.player.maxHp;
                 this.context.state.player.soulIntegrity = Math.max(70, this.context.state.player.soulIntegrity);
+                this.context.state.player.statusEffects = [];
                 this.loadFromAreaManager('town_of_robloxia');
                 this._showMessage('You recovered in town');
                 this._inBattle = false;
