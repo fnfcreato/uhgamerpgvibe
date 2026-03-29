@@ -20,7 +20,7 @@ export const AREA_DEFS = {
             { x: 352, y: 16, w: 96, h: 64, targetAreaId: 'frozen_pass', targetSpawnX: 352, targetSpawnY: 496 },
         ],
         directionSigns: [
-            { x: 400, y: 86, dir: 'N', title: 'North Gate', text: 'Frozen Pass' },
+            { x: 400, y: 206, dir: 'N', title: 'North Gate', text: 'Frozen Pass' },
             { x: 724, y: 312, dir: 'E', title: 'East Road', text: 'Corrupted Zone I' },
         ],
         gateConditions: [],
