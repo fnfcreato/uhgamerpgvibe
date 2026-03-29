@@ -472,8 +472,6 @@ export class ExplorationScene {
             ? Math.max(halfH, Math.min(mapH - halfH, cam._targetY))
             : mapH / 2;
 
-        this._drawDirectionGuide(ctx);
-
         if (this._messageTimer > 0) {
             this._messageTimer -= dt;
         }
