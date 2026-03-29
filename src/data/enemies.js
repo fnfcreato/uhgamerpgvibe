@@ -12,6 +12,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyD', label: 'D', speed: 1.15 },
             { key: 'KeyS', label: 'S', speed: 1.3 },
         ],
+        consumableDrop: { defId: 'field_tonic', chance: 0.4 },
     },
     skeleton: {
         id: 'skeleton',
@@ -27,6 +28,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyD', label: 'D', speed: 1.45 },
             { key: 'KeyW', label: 'W', speed: 1.6 },
         ],
+        consumableDrop: { defId: 'field_tonic', chance: 0.5 },
     },
     shadow_wisp: {
         id: 'shadow_wisp',
@@ -43,6 +45,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyS', label: 'S', speed: 1.55 },
         ],
         loot: { type: 'sword', defId: 'moon_cleaver', chance: 0.08 },
+        consumableDrop: { defId: 'field_tonic', chance: 0.45 },
     },
     corrupted_knight: {
         id: 'corrupted_knight',
@@ -60,6 +63,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyD', label: 'D', speed: 1.8 },
         ],
         loot: { type: 'shield', defId: 'iron_buckler', chance: 0.12 },
+        consumableDrop: { defId: 'field_tonic', chance: 0.35 },
     },
     void_crawler: {
         id: 'void_crawler',
@@ -77,6 +81,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyW', label: 'W', speed: 1.85 },
         ],
         loot: { type: 'sword', defId: 'hunter_katana', chance: 0.08 },
+        consumableDrop: { defId: 'crimson_phial', chance: 0.35 },
     },
     dark_mage: {
         id: 'dark_mage',
@@ -94,6 +99,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyD', label: 'D', speed: 2.0 },
         ],
         loot: { type: 'shield', defId: 'mirror_guard', chance: 0.12 },
+        consumableDrop: { defId: 'crimson_phial', chance: 0.4 },
     },
     corruption_beast: {
         id: 'corruption_beast',
@@ -112,6 +118,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyW', label: 'W', speed: 2.1 },
         ],
         loot: { type: 'shield', defId: 'warded_bulwark', chance: 0.1 },
+        consumableDrop: { defId: 'crimson_phial', chance: 0.45 },
     },
     nightmare_shade: {
         id: 'nightmare_shade',
@@ -130,6 +137,7 @@ export const ENEMY_DEFS = {
             { key: 'KeyW', label: 'W', speed: 2.25 },
         ],
         loot: { type: 'shield', defId: 'sanctified_aegis', chance: 0.1 },
+        consumableDrop: { defId: 'crimson_phial', chance: 0.5 },
     },
     frost_wolf: {
         id: 'frost_wolf',
@@ -149,6 +157,7 @@ export const ENEMY_DEFS = {
             { type: 'frozen', turns: 1, chance: 0.55 },
         ],
         loot: { type: 'sword', defId: 'frostfang_saber', chance: 0.08 },
+        consumableDrop: { defId: 'field_tonic', chance: 0.45 },
     },
     ice_spider: {
         id: 'ice_spider',
@@ -168,6 +177,7 @@ export const ENEMY_DEFS = {
             { type: 'poisoned', turns: 3, damagePerTurn: 4, chance: 0.7 },
         ],
         loot: { type: 'sword', defId: 'venom_fang', chance: 0.07 },
+        consumableDrop: { defId: 'field_tonic', chance: 0.4 },
     },
     ice_shaman: {
         id: 'ice_shaman',
@@ -189,5 +199,63 @@ export const ENEMY_DEFS = {
             { type: 'poisoned', turns: 2, damagePerTurn: 5, chance: 0.35 },
         ],
         loot: { type: 'sword', defId: 'glacier_claymore', chance: 0.06 },
+        consumableDrop: { defId: 'crimson_phial', chance: 0.4 },
+    },
+    frost_golem: {
+        id: 'frost_golem',
+        name: 'Frost Golem',
+        hp: 110,
+        damage: 22,
+        detectionRadius: 35,
+        zone: 'frozen_pass',
+        dodgePatterns: [
+            { key: 'KeyA', label: 'A', speed: 1.1 },
+            { key: 'KeyD', label: 'D', speed: 1.1 },
+            { key: 'KeyS', label: 'S', speed: 1.2 },
+            { key: 'KeyA', label: 'A', speed: 1.3 },
+        ],
+        statusEffects: [],
+        loot: { type: 'shield', defId: 'glacial_guard', chance: 0.15 },
+        consumableDrop: { defId: 'field_tonic', chance: 0.5 },
+        goldDrop: { min: 22, max: 35 },
+    },
+    blizzard_wraith: {
+        id: 'blizzard_wraith',
+        name: 'Blizzard Wraith',
+        hp: 70,
+        damage: 28,
+        detectionRadius: 55,
+        zone: 'glacier_cavern',
+        dodgePatterns: [
+            { key: 'KeyW', label: 'W', speed: 1.6 },
+            { key: 'KeyA', label: 'A', speed: 1.7 },
+            { key: 'KeyD', label: 'D', speed: 1.7 },
+            { key: 'KeyS', label: 'S', speed: 1.8 },
+            { key: 'KeyW', label: 'W', speed: 1.9 },
+        ],
+        statusEffects: [
+            { type: 'frozen', turns: 2, chance: 0.4 },
+        ],
+        loot: { type: 'sword', defId: 'blizzard_fang', chance: 0.12 },
+        consumableDrop: { defId: 'crimson_phial', chance: 0.45 },
+        goldDrop: { min: 28, max: 42 },
+    },
+    ice_elemental: {
+        id: 'ice_elemental',
+        name: 'Ice Elemental',
+        hp: 95,
+        damage: 25,
+        detectionRadius: 45,
+        zone: 'glacier_cavern',
+        dodgePatterns: [
+            { key: 'KeyS', label: 'S', speed: 1.5 },
+            { key: 'KeyW', label: 'W', speed: 1.5 },
+            { key: 'KeyA', label: 'A', speed: 1.6 },
+            { key: 'KeyD', label: 'D', speed: 1.7 },
+        ],
+        statusEffects: [],
+        loot: { type: 'shield', defId: 'crystal_aegis', chance: 0.1 },
+        consumableDrop: { defId: 'crimson_phial', chance: 0.4 },
+        goldDrop: { min: 25, max: 38 },
     },
 };

@@ -71,4 +71,22 @@ export const SHIELD_DEFS = {
         price: 340,
         description: 'The strongest shield in town, built for players who want to tank hard hits.',
     },
+    glacial_guard: {
+        id: 'glacial_guard',
+        name: 'Glacial Guard',
+        maxDurability: 11,
+        reductionPercent: 0.68,
+        flatReduction: 6,
+        price: 165,
+        description: 'Formed from compressed glacial ice that absorbs impact.',
+    },
+    crystal_aegis: {
+        id: 'crystal_aegis',
+        name: 'Crystal Aegis',
+        maxDurability: 13,
+        reductionPercent: 0.74,
+        flatReduction: 7,
+        price: 210,
+        description: 'A translucent shield of pure ice crystal, incredibly resilient.',
+    },
 };

@@ -60,4 +60,17 @@ export const DIALOGUES = {
             { id: 'start', speaker: 'Keeper', text: 'I mark cleared routes. Once a whole zone is pacified, the town sends proper payment instead of just praise.' },
         ],
     },
+    ice_hermit_talk: {
+        id: 'ice_hermit_talk',
+        nodes: [
+            { id: 'start', speaker: 'Ice Hermit', text: 'The frost here protects as much as it destroys. Learn to use the cold, not fight it.', nextNode: 'hint' },
+            { id: 'hint', speaker: 'Ice Hermit', text: 'The golems are slow but their shields are worth the trouble. The wraiths deeper in? Fast and cruel.' },
+        ],
+    },
+    frozen_trader_talk: {
+        id: 'frozen_trader_talk',
+        nodes: [
+            { id: 'start', speaker: 'Frozen Trader', text: 'I got trapped here weeks ago. Take these supplies if you can clear a path back.' },
+        ],
+    },
 };

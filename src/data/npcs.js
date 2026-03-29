@@ -20,4 +20,6 @@ export const NPC_DEFS = {
     scavenger: { id: 'scavenger', name: 'Scavenger', dialogueId: 'scavenger_rumors', sprite: null },
     watcher: { id: 'watcher', name: 'Watcher', dialogueId: 'watcher_warning', sprite: null },
     keeper: { id: 'keeper', name: 'Keeper', dialogueId: 'refuge_keeper', sprite: null },
+    ice_hermit: { id: 'ice_hermit', name: 'Ice Hermit', dialogueId: 'ice_hermit_talk', sprite: null },
+    frozen_trader: { id: 'frozen_trader', name: 'Frozen Trader', dialogueId: 'frozen_trader_talk', sprite: null },
 };

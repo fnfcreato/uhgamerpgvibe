@@ -26,7 +26,7 @@ export const AREA_DEFS = {
         gateConditions: [],
         corruptionProfile: null,
         sanctuaries: [],
-        clearQuestId: null,
+        clearQuestId: 'town_clear',
     },
     frozen_pass: {
         id: 'frozen_pass',
@@ -35,23 +35,28 @@ export const AREA_DEFS = {
         bgm: 'town',
         battleBgm: 'battle_town',
         weather: 'snow',
+        gateConditions: [{ type: 'flag', key: 'town_cleared', value: true }],
         enemySpawns: [
-            { spawnId: 'ice_pass_wolf_1', enemyDefId: 'frost_wolf', x: 196, y: 180 },
-            { spawnId: 'ice_pass_wolf_2', enemyDefId: 'frost_wolf', x: 540, y: 170 },
-            { spawnId: 'ice_pass_spider_1', enemyDefId: 'ice_spider', x: 248, y: 376 },
-            { spawnId: 'ice_pass_spider_2', enemyDefId: 'ice_spider', x: 520, y: 408 },
+            { spawnId: 'ice_pass_wolf_1', enemyDefId: 'frost_wolf', x: 200, y: 200 },
+            { spawnId: 'ice_pass_wolf_2', enemyDefId: 'frost_wolf', x: 650, y: 300 },
+            { spawnId: 'ice_pass_spider_1', enemyDefId: 'ice_spider', x: 300, y: 450 },
+            { spawnId: 'ice_pass_spider_2', enemyDefId: 'ice_spider', x: 550, y: 550 },
+            { spawnId: 'ice_pass_golem_1', enemyDefId: 'frost_golem', x: 400, y: 350 },
+            { spawnId: 'ice_pass_golem_2', enemyDefId: 'frost_golem', x: 750, y: 250 },
         ],
-        npcSpawns: [],
+        npcSpawns: [
+            { npcDefId: 'ice_hermit', x: 180, y: 380 },
+        ],
         exits: [
-            { x: 320, y: 528, w: 80, h: 32, targetAreaId: 'town_of_robloxia', targetSpawnX: 400, targetSpawnY: 64 },
-            { x: 688, y: 240, w: 32, h: 64, targetAreaId: 'glacier_cavern', targetSpawnX: 48, targetSpawnY: 256 },
+            { x: 448, y: 704, w: 80, h: 16, targetAreaId: 'town_of_robloxia', targetSpawnX: 400, targetSpawnY: 100 },
+            { x: 944, y: 320, w: 16, h: 64, targetAreaId: 'glacier_cavern', targetSpawnX: 48, targetSpawnY: 256 },
         ],
-        gateConditions: [],
+        gateConditions: [{ type: 'flag', key: 'town_cleared', value: true }],
         corruptionProfile: null,
         sanctuaries: [
             { x: 96, y: 368, w: 80, h: 80 },
         ],
-        clearQuestId: null,
+        clearQuestId: 'frozen_pass_clear',
     },
     glacier_cavern: {
         id: 'glacier_cavern',
@@ -60,22 +65,27 @@ export const AREA_DEFS = {
         bgm: 'town',
         battleBgm: 'battle_town',
         weather: 'snow',
+        gateConditions: [{ type: 'flag', key: 'frozen_pass_cleared', value: true }],
         enemySpawns: [
             { spawnId: 'cavern_spider_1', enemyDefId: 'ice_spider', x: 184, y: 104 },
             { spawnId: 'cavern_shaman_1', enemyDefId: 'ice_shaman', x: 424, y: 136 },
             { spawnId: 'cavern_spider_2', enemyDefId: 'ice_spider', x: 264, y: 376 },
             { spawnId: 'cavern_shaman_2', enemyDefId: 'ice_shaman', x: 504, y: 392 },
+            { spawnId: 'cavern_wraith_1', enemyDefId: 'blizzard_wraith', x: 350, y: 200 },
+            { spawnId: 'cavern_elemental_1', enemyDefId: 'ice_elemental', x: 450, y: 300 },
         ],
-        npcSpawns: [],
+        npcSpawns: [
+            { npcDefId: 'frozen_trader', x: 200, y: 360 },
+        ],
         exits: [
-            { x: 0, y: 224, w: 16, h: 64, targetAreaId: 'frozen_pass', targetSpawnX: 664, targetSpawnY: 272 },
+            { x: 0, y: 224, w: 16, h: 64, targetAreaId: 'frozen_pass', targetSpawnX: 920, targetSpawnY: 352 },
         ],
-        gateConditions: [],
+        gateConditions: [{ type: 'flag', key: 'frozen_pass_cleared', value: true }],
         corruptionProfile: null,
         sanctuaries: [
             { x: 176, y: 352, w: 64, h: 64 },
         ],
-        clearQuestId: null,
+        clearQuestId: 'glacier_cavern_clear',
     },
     corrupted_zone_1: {
         id: 'corrupted_zone_1',
@@ -83,6 +93,7 @@ export const AREA_DEFS = {
         mapFile: 'corruptedZone1',
         bgm: 'corruption',
         battleBgm: 'battle_corruption',
+        gateConditions: [{ type: 'flag', key: 'glacier_cavern_cleared', value: true }],
         enemySpawns: [
             { spawnId: 'z1_wisp_1', enemyDefId: 'shadow_wisp', x: 200, y: 200 },
             { spawnId: 'z1_wisp_2', enemyDefId: 'shadow_wisp', x: 400, y: 350 },
@@ -97,7 +108,7 @@ export const AREA_DEFS = {
             { x: 0, y: 256, w: 16, h: 32, targetAreaId: 'town_of_robloxia', targetSpawnX: 760, targetSpawnY: 312 },
             { x: 704, y: 256, w: 16, h: 32, targetAreaId: 'corrupted_zone_2', targetSpawnX: 40, targetSpawnY: 272 },
         ],
-        gateConditions: [],
+        gateConditions: [{ type: 'flag', key: 'town_cleared', value: true }],
         corruptionProfile: { level: 1, tint: 'rgba(80, 0, 80, 0.08)', particleDensity: 0.3 },
         sanctuaries: [
             { x: 64, y: 80, w: 96, h: 80 },
@@ -111,6 +122,7 @@ export const AREA_DEFS = {
         mapFile: 'corruptedZone2',
         bgm: 'corruption',
         battleBgm: 'battle_corruption',
+        gateConditions: [{ type: 'flag', key: 'zone_1_cleared', value: true }],
         enemySpawns: [
             { spawnId: 'z2_crawler_1', enemyDefId: 'void_crawler', x: 200, y: 200 },
             { spawnId: 'z2_crawler_2', enemyDefId: 'void_crawler', x: 500, y: 300 },
@@ -125,7 +137,7 @@ export const AREA_DEFS = {
             { x: 0, y: 256, w: 16, h: 32, targetAreaId: 'corrupted_zone_1', targetSpawnX: 680, targetSpawnY: 272 },
             { x: 704, y: 256, w: 16, h: 32, targetAreaId: 'corrupted_zone_3', targetSpawnX: 40, targetSpawnY: 312 },
         ],
-        gateConditions: [],
+        gateConditions: [{ type: 'flag', key: 'zone_1_cleared', value: true }],
         corruptionProfile: { level: 2, tint: 'rgba(80, 0, 80, 0.15)', particleDensity: 0.6 },
         sanctuaries: [
             { x: 64, y: 432, w: 112, h: 80 },
@@ -138,6 +150,7 @@ export const AREA_DEFS = {
         mapFile: 'corruptedZone3',
         bgm: 'corruption',
         battleBgm: 'battle_corruption',
+        gateConditions: [{ type: 'flag', key: 'zone_2_cleared', value: true }],
         enemySpawns: [
             { spawnId: 'z3_beast_1', enemyDefId: 'corruption_beast', x: 250, y: 250 },
             { spawnId: 'z3_beast_2', enemyDefId: 'corruption_beast', x: 550, y: 400 },
@@ -152,7 +165,7 @@ export const AREA_DEFS = {
             { x: 0, y: 304, w: 16, h: 32, targetAreaId: 'corrupted_zone_2', targetSpawnX: 680, targetSpawnY: 272 },
             { x: 784, y: 304, w: 16, h: 32, targetAreaId: 'final_arena', targetSpawnX: 240, targetSpawnY: 320 },
         ],
-        gateConditions: [],
+        gateConditions: [{ type: 'flag', key: 'zone_2_cleared', value: true }],
         corruptionProfile: { level: 3, tint: 'rgba(100, 0, 60, 0.2)', particleDensity: 1.0 },
         sanctuaries: [
             { x: 80, y: 96, w: 112, h: 112 },
@@ -165,6 +178,7 @@ export const AREA_DEFS = {
         mapFile: 'finalArena',
         bgm: 'corruption',
         battleBgm: 'battle_corruption',
+        gateConditions: [{ type: 'flag', key: 'zone_3_cleared', value: true }],
         enemySpawns: [
             { spawnId: 'final_beast_1', enemyDefId: 'corruption_beast', x: 190, y: 150 },
             { spawnId: 'final_shade_1', enemyDefId: 'nightmare_shade', x: 280, y: 150 },
@@ -173,7 +187,7 @@ export const AREA_DEFS = {
         exits: [
             { x: 224, y: 384, w: 32, h: 16, targetAreaId: 'corrupted_zone_3', targetSpawnX: 760, targetSpawnY: 312 },
         ],
-        gateConditions: [],
+        gateConditions: [{ type: 'flag', key: 'zone_3_cleared', value: true }],
         corruptionProfile: { level: 3, tint: 'rgba(120, 0, 40, 0.25)', particleDensity: 1.5 },
         sanctuaries: [],
         clearQuestId: null,

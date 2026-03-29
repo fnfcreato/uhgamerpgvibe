@@ -89,4 +89,13 @@ export const SWORD_DEFS = {
         price: 240,
         description: 'A hooked blade made for relentless pressure and ugly attrition fights.',
     },
+    blizzard_fang: {
+        id: 'blizzard_fang',
+        name: 'Blizzard Fang',
+        damage: 11,
+        barSpeed: 1.9,
+        barCount: 3,
+        price: 180,
+        description: 'Channels the cold fury of blizzard wraiths into rapid frozen strikes.',
+    },
 };

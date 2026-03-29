@@ -1,4 +1,34 @@
 export const QUEST_DEFS = {
+    town_clear: {
+        id: 'town_clear',
+        name: 'Town Secured',
+        description: 'Drive the threats out of Town of Robloxia.',
+        rewards: [
+            { type: 'gold', amount: 45 },
+            { type: 'item', itemType: 'consumable', defId: 'field_tonic', count: 3 },
+            { type: 'flag', key: 'town_cleared', value: true },
+        ],
+    },
+    frozen_pass_clear: {
+        id: 'frozen_pass_clear',
+        name: 'Frozen Pass Cleared',
+        description: 'Make the pass safe enough to travel through.',
+        rewards: [
+            { type: 'gold', amount: 85 },
+            { type: 'item', itemType: 'consumable', defId: 'field_tonic', count: 3 },
+            { type: 'flag', key: 'frozen_pass_cleared', value: true },
+        ],
+    },
+    glacier_cavern_clear: {
+        id: 'glacier_cavern_clear',
+        name: 'Glacier Cavern Cleared',
+        description: 'Survive the cavern and break its frozen hold.',
+        rewards: [
+            { type: 'gold', amount: 120 },
+            { type: 'item', itemType: 'consumable', defId: 'crimson_phial', count: 2 },
+            { type: 'flag', key: 'glacier_cavern_cleared', value: true },
+        ],
+    },
     main_quest_1: {
         id: 'main_quest_1',
         name: 'The Corruption Begins',

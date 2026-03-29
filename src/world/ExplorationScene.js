@@ -281,6 +281,18 @@ export class ExplorationScene {
         }
     }
 
+    _getAreaLockMessage(areaId) {
+        const messages = {
+            frozen_pass: 'Clear Town of Robloxia first',
+            glacier_cavern: 'Clear Frozen Pass first',
+            corrupted_zone_1: 'Clear Town of Robloxia first',
+            corrupted_zone_2: 'Clear Corrupted Zone I first',
+            corrupted_zone_3: 'Clear Corrupted Zone II first',
+            final_arena: 'Clear Corrupted Zone III first',
+        };
+        return messages[areaId] || 'Clear the previous area first';
+    }
+
     _getRewardLabel(defId, type) {
         if (type === 'sword') return SWORD_DEFS[defId]?.name || defId.replace(/_/g, ' ');
         if (type === 'shield') return SHIELD_DEFS[defId]?.name || defId.replace(/_/g, ' ');
@@ -343,10 +355,11 @@ export class ExplorationScene {
     transitionToArea(areaId, spawnX, spawnY) {
         const areaManager = new AreaManager(this.context);
         if (!areaManager.canEnterArea(areaId)) {
-            this._showMessage('That path is sealed for now');
+            this._showMessage(this._getAreaLockMessage(areaId));
             return false;
         }
 
+        const firstVisit = !this.context.state.area.visitedAreas.has(areaId);
         const result = areaManager.loadArea(areaId);
         if (!result) {
             this._showMessage('Area failed to load');
@@ -371,7 +384,15 @@ export class ExplorationScene {
         for (const npc of result.npcs) this.addNPC(npc);
 
         this._playAreaBGM();
-        this._showMessage(areaDef?.name || areaId);
+
+        const firstVisitReward = firstVisit && areaId !== 'town_of_robloxia'
+            ? this.context.inventory.addItem('field_tonic', 'consumable')
+            : null;
+        if (firstVisitReward) {
+            this._showMessage(`${areaDef?.name || areaId}  Found Field Tonic`);
+        } else {
+            this._showMessage(areaDef?.name || areaId);
+        }
         return true;
     }
 
@@ -512,10 +533,10 @@ export class ExplorationScene {
                     }
                 }
 
-                if (!gotLoot && this._corruptionProfile && Math.random() < 0.18) {
-                    const tonic = this.context.inventory.addItem('field_tonic', 'consumable');
-                    if (tonic) {
-                        summaryLines.push('Found Field Tonic');
+                if (enemy.def.consumableDrop && Math.random() < enemy.def.consumableDrop.chance) {
+                    const potion = this.context.inventory.addItem(enemy.def.consumableDrop.defId, 'consumable');
+                    if (potion) {
+                        summaryLines.push(`Found ${this._getRewardLabel(enemy.def.consumableDrop.defId, 'consumable')}`);
                     }
                 }
 
