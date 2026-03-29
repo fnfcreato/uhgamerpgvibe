@@ -109,6 +109,10 @@ function generate() {
         set(32, row, WALL, true);
     }
     for (let col = 23; col <= 26; col++) {
+        set(col, 4, PATH, false);
+        for (let row = 5; row <= 10; row++) {
+            set(col, row, STONE_FLOOR, false);
+        }
         set(col, 11, PATH, false);
         set(col, 12, STONE_FLOOR, false);
     }
