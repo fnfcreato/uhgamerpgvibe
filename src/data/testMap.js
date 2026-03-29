@@ -58,6 +58,22 @@ function generate() {
         set(W - 2, row, WALL, true);
     }
 
+    for (let col = 22; col <= 27; col++) {
+        set(col, 0, PATH, false);
+        set(col, 1, PATH, false);
+        set(col, 2, STONE_FLOOR, false);
+        setDeco(col, 2, 5);
+    }
+    for (let col = 21; col <= 28; col++) {
+        set(col, 3, STONE_FLOOR, false);
+    }
+    for (let row = 2; row <= 5; row++) {
+        set(21, row, WALL, true);
+        set(28, row, WALL, true);
+    }
+    setDeco(22, 3, 5);
+    setDeco(27, 3, 5);
+
     for (let row = 18; row <= 21; row++) {
         set(W - 2, row, PATH, false);
         set(W - 1, row, PATH, false);

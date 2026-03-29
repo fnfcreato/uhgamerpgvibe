@@ -76,11 +76,36 @@ export class TileRenderer {
                         ctx.fillStyle = ICE_WALL_FACE_COLOR;
                         ctx.fillRect(screen.x, screen.y + ts - 4, ts, 4);
                     } else {
-                        ctx.fillStyle = TILE_COLORS[tileId] || '#ff00ff';
-                        ctx.fillRect(screen.x, screen.y, ts, ts);
+                        this._renderGroundTile(ctx, tileId, screen.x, screen.y, ts);
                     }
                 }
             }
+        }
+    }
+
+    _renderGroundTile(ctx, tileId, x, y, ts) {
+        const base = TILE_COLORS[tileId] || '#ff00ff';
+        ctx.fillStyle = base;
+        ctx.fillRect(x, y, ts, ts);
+
+        if (tileId >= 20 && tileId <= 24) {
+            ctx.fillStyle = tileId === 23 ? 'rgba(210, 245, 255, 0.16)' : 'rgba(255, 255, 255, 0.22)';
+            ctx.fillRect(x + 1, y + 1, ts - 2, 3);
+            ctx.fillStyle = tileId === 24 ? 'rgba(180, 205, 225, 0.22)' : 'rgba(110, 170, 210, 0.18)';
+            ctx.fillRect(x + 2, y + ts - 4, ts - 4, 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+            ctx.fillRect(x + 3, y + 5, 2, 2);
+            ctx.fillRect(x + 9, y + 8, 3, 1);
+            if (tileId !== 24) {
+                ctx.fillStyle = 'rgba(120, 200, 235, 0.18)';
+                ctx.fillRect(x + 5, y + 11, 5, 1);
+            }
+            return;
+        }
+
+        if (tileId === 3 || tileId === 5) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            ctx.fillRect(x + 1, y + 1, ts - 2, 2);
         }
     }
 
@@ -133,6 +158,9 @@ export class TileRenderer {
             ctx.fillRect(x + 7, y + 2, 2, ts - 4);
             ctx.fillRect(x + 3, y + 7, ts - 6, 2);
             ctx.fillRect(x + 5, y + 5, 6, 6);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+            ctx.fillRect(x + 7, y + 3, 1, 3);
+            ctx.fillRect(x + 10, y + 7, 1, 1);
         } else {
             ctx.globalAlpha = 0.8;
             ctx.fillRect(x + 3, y + 3, ts - 6, ts - 6);
@@ -157,8 +185,7 @@ export class TileRenderer {
                 const tileId = tileMap.getTile('foreground', col, row);
                 if (tileId === 0) continue;
                 const screen = camera.worldToScreen(col * ts, row * ts);
-                ctx.fillStyle = TILE_COLORS[tileId] || '#ff00ff';
-                ctx.fillRect(screen.x, screen.y, ts, ts);
+                this._renderGroundTile(ctx, tileId, screen.x, screen.y, ts);
             }
         }
     }

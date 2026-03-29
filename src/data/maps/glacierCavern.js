@@ -50,40 +50,66 @@ function generate() {
         set(W - 2, row, ICE_WALL, true);
     }
 
-    for (let row = 14; row <= 17; row++) {
+    for (let row = 14; row <= 18; row++) {
         set(0, row, ICE_PATH);
         set(1, row, ICE_PATH);
     }
 
     fillRect(2, 2, W - 3, H - 3, DEEP_ICE);
-    fillRect(4, 4, 16, 11, ICE);
-    fillRect(23, 5, 36, 12, ICE);
-    fillRect(10, 19, 18, 27, SNOW);
-    fillRect(24, 18, 34, 27, ICE);
+    fillRect(4, 11, 17, 20, ICE);
+    fillRect(23, 6, 37, 15, ICE);
+    fillRect(11, 22, 19, 27, SNOW);
+    fillRect(24, 20, 35, 27, ICE);
 
-    for (let col = 2; col <= 20; col++) {
+    for (let col = 2; col <= 18; col++) {
         set(col, 15, ICE_PATH);
         set(col, 16, ICE_PATH);
     }
-    for (let row = 15; row <= 24; row++) {
-        set(20, row, ICE_PATH);
-        set(21, row, ICE_PATH);
+    for (let row = 11; row <= 23; row++) {
+        set(18, row, ICE_PATH);
+        set(19, row, ICE_PATH);
     }
-    for (let col = 20; col <= 34; col++) {
+    for (let col = 18; col <= 36; col++) {
+        set(col, 11, ICE_PATH);
+        set(col, 12, ICE_PATH);
+    }
+    for (let col = 18; col <= 31; col++) {
+        set(col, 23, ICE_PATH);
         set(col, 24, ICE_PATH);
-        set(col, 25, ICE_PATH);
     }
 
-    fillRect(17, 6, 21, 12, ICE_WALL, true);
-    fillRect(18, 7, 20, 11, DEEP_ICE);
+    fillRect(9, 4, 16, 9, ICE_WALL, true);
+    fillRect(10, 5, 15, 8, DEEP_ICE);
+    fillRect(22, 17, 26, 22, ICE_WALL, true);
+    fillRect(23, 18, 25, 21, DEEP_ICE);
+    fillRect(31, 18, 36, 25, ICE_WALL, true);
+    fillRect(32, 19, 35, 24, ICE);
+    fillRect(6, 23, 9, 28, ICE_WALL, true);
+    fillRect(27, 4, 31, 8, ICE_WALL, true);
 
-    fillRect(6, 22, 9, 28, ICE_WALL, true);
-    fillRect(27, 19, 30, 24, ICE_WALL, true);
+    fillRect(13, 21, 17, 26, SNOW);
+    deco(14, 22, CRYSTAL);
+    deco(16, 24, CRYSTAL);
+    deco(15, 26, CRYSTAL);
+
+    for (let row = 5; row <= 27; row++) {
+        if (row < 14 || row > 18) {
+            set(21, row, ICE_WALL, true);
+        }
+    }
+    for (let col = 21; col <= 29; col++) {
+        set(col, 18, ICE_WALL, true);
+    }
+    for (let col = 12; col <= 28; col++) {
+        if (col !== 18 && col !== 19) {
+            set(col, 20, ICE_WALL, true);
+        }
+    }
 
     for (let row = 4; row <= H - 5; row++) {
         for (let col = 4; col <= W - 5; col++) {
-            if ((col * 3 + row * 9) % 19 === 0) deco(col, row, CRYSTAL);
-            if ((col * 5 + row * 2) % 21 === 0) deco(col, row, ICE_PATH);
+            if ((col * 3 + row * 9) % 17 === 0) deco(col, row, CRYSTAL);
+            if ((col * 5 + row * 2) % 21 === 0 && ground[index(col, row)] !== ICE_PATH) deco(col, row, ICE_PATH);
         }
     }
 

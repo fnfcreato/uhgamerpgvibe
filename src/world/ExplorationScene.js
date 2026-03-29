@@ -37,6 +37,9 @@ export class ExplorationScene {
         this._soulStage = 100;
         this._sanctuaryZones = [];
         this._inSanctuary = false;
+        this._weatherType = null;
+        this._snowParticles = [];
+        this._directionSigns = [];
     }
 
     onEnter() {
@@ -70,7 +73,10 @@ export class ExplorationScene {
         this._areaExits = options.exits || [];
         this._corruptionProfile = options.corruptionProfile || null;
         this._sanctuaryZones = options.sanctuaries || [];
+        this._directionSigns = options.directionSigns || [];
         this._inSanctuary = false;
+        this._weatherType = options.weather || null;
+        this._resetWeather();
         this.context.state.area.playerSpawnPoint = { x: playerX, y: playerY };
         this._soulStage = this._getSoulStage();
 
@@ -108,6 +114,124 @@ export class ExplorationScene {
     _showMessage(text) {
         this._message = text;
         this._messageTimer = 1.8;
+    }
+
+    _resetWeather() {
+        if (this._weatherType === 'snow') {
+            this._snowParticles = Array.from({ length: 40 }, () => this._createSnowParticle(true));
+            return;
+        }
+
+        this._snowParticles = [];
+    }
+
+    _createSnowParticle(randomY = false) {
+        return {
+            x: Math.random() * CANVAS.INTERNAL_WIDTH,
+            y: randomY ? Math.random() * CANVAS.INTERNAL_HEIGHT : -8 - Math.random() * 24,
+            speed: 10 + Math.random() * 20,
+            drift: -7 + Math.random() * 14,
+            radius: 0.8 + Math.random() * 1.8,
+            alpha: 0.3 + Math.random() * 0.45,
+            sway: Math.random() * Math.PI * 2,
+            swaySpeed: 0.8 + Math.random() * 1.4,
+        };
+    }
+
+    _updateWeather(dt) {
+        if (this._weatherType !== 'snow') {
+            return;
+        }
+        if (this._snowParticles.length === 0) {
+            this._resetWeather();
+        }
+
+        for (let i = 0; i < this._snowParticles.length; i++) {
+            const particle = this._snowParticles[i];
+            particle.sway += particle.swaySpeed * dt;
+            particle.y += particle.speed * dt;
+            particle.x += (particle.drift + Math.sin(particle.sway) * 6) * dt;
+
+            if (particle.y > CANVAS.INTERNAL_HEIGHT + 10 || particle.x < -16 || particle.x > CANVAS.INTERNAL_WIDTH + 16) {
+                this._snowParticles[i] = this._createSnowParticle(false);
+            }
+        }
+    }
+
+    _renderWeather(ctx) {
+        if (this._weatherType !== 'snow') {
+            return;
+        }
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(220, 240, 255, 0.08)';
+        ctx.fillRect(0, 0, CANVAS.INTERNAL_WIDTH, CANVAS.INTERNAL_HEIGHT);
+        for (const particle of this._snowParticles) {
+            ctx.globalAlpha = particle.alpha;
+            ctx.fillStyle = '#f7fdff';
+            ctx.beginPath();
+            ctx.arc(Math.round(particle.x), Math.round(particle.y), particle.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.restore();
+    }
+
+    _getNearbyDirectionSign() {
+        if (!this.player || this._directionSigns.length === 0) {
+            return null;
+        }
+
+        let closest = null;
+        let closestDist = Infinity;
+        for (const sign of this._directionSigns) {
+            const dx = this.player.position.x - sign.x;
+            const dy = this.player.position.y - sign.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 34 && dist < closestDist) {
+                closest = sign;
+                closestDist = dist;
+            }
+        }
+        return closest;
+    }
+
+    _drawDirectionSign(ctx, camera, sign) {
+        const screen = camera.worldToScreen(sign.x, sign.y);
+        ctx.save();
+        ctx.fillStyle = '#6d4b2e';
+        ctx.fillRect(Math.round(screen.x - 1), Math.round(screen.y - 2), 2, 12);
+        ctx.fillStyle = '#b88c54';
+        ctx.fillRect(Math.round(screen.x - 10), Math.round(screen.y - 10), 20, 8);
+        ctx.strokeStyle = '#3b2615';
+        ctx.strokeRect(Math.round(screen.x - 9.5), Math.round(screen.y - 9.5), 19, 7);
+        PixelText.draw(ctx, sign.dir, Math.round(screen.x), Math.round(screen.y - 8), {
+            align: 'center',
+            baseline: 'middle',
+            color: '#1b130c',
+            size: 7,
+            weight: 'bold',
+        });
+        ctx.restore();
+    }
+
+    _drawDirectionGuide(ctx) {
+        const sign = this._getNearbyDirectionSign();
+        if (!sign) {
+            return;
+        }
+
+        ctx.fillStyle = 'rgba(8, 10, 16, 0.9)';
+        ctx.fillRect(88, 132, 144, 28);
+        ctx.strokeStyle = '#8e7a54';
+        ctx.strokeRect(88.5, 132.5, 143, 27);
+        PixelText.draw(ctx, `${sign.title}: ${sign.text}`, 160, 138, {
+            align: 'center',
+            color: '#ffe3a8',
+        });
+        PixelText.draw(ctx, 'Follow the road to travel there', 160, 148, {
+            align: 'center',
+            color: '#d8e6f2',
+        });
     }
 
     _getSoulStage() {
@@ -205,6 +329,8 @@ export class ExplorationScene {
             exits: areaDef.exits || [],
             corruptionProfile: areaDef.corruptionProfile || null,
             sanctuaries: areaDef.sanctuaries || [],
+            directionSigns: areaDef.directionSigns || [],
+            weather: areaDef.weather || null,
         });
 
         for (const enemy of result.enemies) this.addEnemy(enemy);
@@ -237,6 +363,8 @@ export class ExplorationScene {
             exits: areaDef.exits || [],
             corruptionProfile: areaDef.corruptionProfile || null,
             sanctuaries: areaDef.sanctuaries || [],
+            directionSigns: areaDef.directionSigns || [],
+            weather: areaDef.weather || null,
         });
 
         for (const enemy of result.enemies) this.addEnemy(enemy);
@@ -307,6 +435,7 @@ export class ExplorationScene {
         }
 
         this._updateSoulIntegrity(dt);
+        this._updateWeather(dt);
 
         if (!this._inBattle) {
             for (const enemy of this.enemies) {
@@ -342,6 +471,8 @@ export class ExplorationScene {
         cam._targetY = mapH > CANVAS.INTERNAL_HEIGHT
             ? Math.max(halfH, Math.min(mapH - halfH, cam._targetY))
             : mapH / 2;
+
+        this._drawDirectionGuide(ctx);
 
         if (this._messageTimer > 0) {
             this._messageTimer -= dt;
@@ -441,12 +572,17 @@ export class ExplorationScene {
             }
         }
 
+        for (const sign of this._directionSigns) {
+            this._drawDirectionSign(ctx, camera, sign);
+        }
+
         this.player.render(ctx, camera);
         this.tileRenderer.renderForeground(ctx, this.tileMap, camera);
 
         if (this._corruptionProfile) {
             this.tileRenderer.renderCorruptionOverlay(ctx, this._corruptionProfile);
         }
+        this._renderWeather(ctx);
 
         ctx.fillStyle = '#fff';
         ctx.font = '8px monospace';
@@ -460,6 +596,8 @@ export class ExplorationScene {
                 color: '#8fd3ff',
             });
         }
+
+        this._drawDirectionGuide(ctx);
 
         if (this._messageTimer > 0) {
             ctx.fillStyle = 'rgba(8, 10, 16, 0.88)';

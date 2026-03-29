@@ -17,7 +17,11 @@ export const AREA_DEFS = {
         ],
         exits: [
             { x: 784, y: 304, w: 16, h: 32, targetAreaId: 'corrupted_zone_1', targetSpawnX: 40, targetSpawnY: 272 },
-            { x: 368, y: 32, w: 64, h: 16, targetAreaId: 'frozen_pass', targetSpawnX: 352, targetSpawnY: 496 },
+            { x: 352, y: 16, w: 96, h: 64, targetAreaId: 'frozen_pass', targetSpawnX: 352, targetSpawnY: 496 },
+        ],
+        directionSigns: [
+            { x: 400, y: 86, dir: 'N', title: 'North Gate', text: 'Frozen Pass' },
+            { x: 724, y: 312, dir: 'E', title: 'East Road', text: 'Corrupted Zone I' },
         ],
         gateConditions: [],
         corruptionProfile: null,
@@ -30,6 +34,7 @@ export const AREA_DEFS = {
         mapFile: 'frozenPass',
         bgm: 'town',
         battleBgm: 'battle_town',
+        weather: 'snow',
         enemySpawns: [
             { spawnId: 'ice_pass_wolf_1', enemyDefId: 'frost_wolf', x: 196, y: 180 },
             { spawnId: 'ice_pass_wolf_2', enemyDefId: 'frost_wolf', x: 540, y: 170 },
@@ -54,6 +59,7 @@ export const AREA_DEFS = {
         mapFile: 'glacierCavern',
         bgm: 'town',
         battleBgm: 'battle_town',
+        weather: 'snow',
         enemySpawns: [
             { spawnId: 'cavern_spider_1', enemyDefId: 'ice_spider', x: 184, y: 104 },
             { spawnId: 'cavern_shaman_1', enemyDefId: 'ice_shaman', x: 424, y: 136 },
