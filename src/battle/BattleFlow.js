@@ -139,9 +139,14 @@ export class BattleFlow {
         }
 
         const messages = [];
+        const blockedAttack = Boolean(this.lastBlockResult?.shield);
         for (const effect of this.currentEnemy.attackStatusEffects) {
             const chance = effect.chance ?? 1;
             if (Math.random() > chance) {
+                continue;
+            }
+            if (blockedAttack && effect.type === 'frozen') {
+                messages.push('BLOCKED FRZ!');
                 continue;
             }
             const applied = StatusEffectSystem.apply(this.playerState, effect);

@@ -1,4 +1,5 @@
 import { STATUS_EFFECTS } from '../data/constants.js';
+import { ARMOR_DEFS } from '../data/armors.js';
 
 export class StatusEffectSystem {
     static list(playerState) {
@@ -13,6 +14,14 @@ export class StatusEffectSystem {
         const meta = STATUS_EFFECTS[effect?.type];
         if (!meta) {
             return null;
+        }
+
+        if (effect.type === 'frozen') {
+            const armorDef = playerState.equippedArmor ? ARMOR_DEFS[playerState.equippedArmor.defId] : null;
+            const freezeResist = armorDef?.freezeResist || 0;
+            if (freezeResist > 0 && Math.random() < freezeResist) {
+                return 'RESIST!';
+            }
         }
 
         const turns = Math.max(1, effect.turns ?? meta.defaultTurns ?? 1);

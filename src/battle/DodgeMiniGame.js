@@ -16,9 +16,10 @@ const DODGE_LATE_WINDOW = 3;
 const DODGE_SPEED_SCALE = 0.78;
 
 export class DodgeMiniGame {
-    constructor(pattern, centerX, centerY) {
+    constructor(pattern, centerX, centerY, options = {}) {
         this._centerX = centerX;
         this._centerY = centerY;
+        this._speedMultiplier = options.speedMultiplier || 1;
 
         this._circles = pattern.map((p, index) => {
             const position = POSITION_POOL[index % POSITION_POOL.length];
@@ -76,7 +77,7 @@ export class DodgeMiniGame {
         const circle = this._circles[this._currentIndex];
 
         if (circle.state === 'active') {
-            circle.ringRadius -= circle.speed * 36 * DODGE_SPEED_SCALE * dt;
+            circle.ringRadius -= circle.speed * this._speedMultiplier * 36 * DODGE_SPEED_SCALE * dt;
 
             if (circle.ringRadius < circle.targetRadius - circle.lateWindow) {
                 circle.state = 'hit';

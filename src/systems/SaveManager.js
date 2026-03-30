@@ -1,3 +1,5 @@
+import { ARMOR_DEFS } from '../data/armors.js';
+
 const SAVE_KEY = 'sword_of_stability_save';
 
 export class SaveManager {
@@ -10,18 +12,21 @@ export class SaveManager {
         return {
             player: {
                 hp: player.hp,
+                baseMaxHp: player.baseMaxHp,
                 maxHp: player.maxHp,
                 soulIntegrity: player.soulIntegrity,
                 gold: player.gold,
                 position: { x: player.position.x, y: player.position.y },
                 equippedSwords: player.equippedSwords.map((item) => item?.instanceId || null),
                 equippedShield: player.equippedShield?.instanceId || null,
+                equippedArmor: player.equippedArmor?.instanceId || null,
                 statusEffects: (player.statusEffects || []).map((effect) => ({ ...effect })),
             },
             inventory: {
                 items: inventory.items.map((item) => ({ ...item })),
                 equippedSwords: inventory.equippedSwords.map((item) => item?.instanceId || null),
                 equippedShield: inventory.equippedShield?.instanceId || null,
+                equippedArmor: inventory.equippedArmor?.instanceId || null,
                 capacity: inventory.capacity,
             },
             quest: {
@@ -70,7 +75,7 @@ export class SaveManager {
 
     _apply(data) {
         const { player, inventory, quest, area, settings } = this.gameState;
-        const savedInventory = data.inventory || { items: [], equippedSwords: [null, null], equippedShield: null, capacity: 24 };
+        const savedInventory = data.inventory || { items: [], equippedSwords: [null, null], equippedShield: null, equippedArmor: null, capacity: 24 };
         const items = (savedInventory.items || []).map((item) => ({ ...item }));
         const itemsById = new Map(items.map((item) => [item.instanceId, item]));
 
@@ -78,9 +83,10 @@ export class SaveManager {
         inventory.capacity = savedInventory.capacity || 24;
         inventory.equippedSwords = (savedInventory.equippedSwords || [null, null]).map((id) => itemsById.get(id) || null);
         inventory.equippedShield = itemsById.get(savedInventory.equippedShield) || null;
+        inventory.equippedArmor = itemsById.get(savedInventory.equippedArmor) || null;
 
+        player.baseMaxHp = data.player?.baseMaxHp ?? player.baseMaxHp ?? 100;
         player.hp = data.player?.hp ?? player.hp;
-        player.maxHp = data.player?.maxHp ?? player.maxHp;
         player.soulIntegrity = data.player?.soulIntegrity ?? player.soulIntegrity;
         player.gold = data.player?.gold ?? player.gold;
         player.position.x = data.player?.position?.x ?? player.position.x;
@@ -91,6 +97,11 @@ export class SaveManager {
             player.equippedSwords.push(null);
         }
         player.equippedShield = inventory.equippedShield;
+        player.equippedArmor = inventory.equippedArmor;
+
+        const armorDef = player.equippedArmor ? ARMOR_DEFS[player.equippedArmor.defId] : null;
+        player.maxHp = player.baseMaxHp + (armorDef?.maxHpBonus || 0);
+        player.hp = Math.min(player.hp, player.maxHp);
 
         quest.flags = new Map(data.quest?.flags || []);
         quest.completedQuests = new Set(data.quest?.completedQuests || []);

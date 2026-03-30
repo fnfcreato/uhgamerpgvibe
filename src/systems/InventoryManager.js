@@ -1,4 +1,5 @@
 import { SHIELD_DEFS } from '../data/shields.js';
+import { ARMOR_DEFS } from '../data/armors.js';
 
 export class InventoryManager {
     constructor(gameState) {
@@ -8,6 +9,7 @@ export class InventoryManager {
         this._nextItemId = 1;
 
         this._syncEquipmentRefs();
+        this._recalculatePlayerStats();
     }
 
     _syncEquipmentRefs() {
@@ -27,6 +29,17 @@ export class InventoryManager {
         const shield = this.inventoryState.equippedShield || this.playerState.equippedShield || null;
         this.inventoryState.equippedShield = shield;
         this.playerState.equippedShield = shield;
+
+        const armor = this.inventoryState.equippedArmor || this.playerState.equippedArmor || null;
+        this.inventoryState.equippedArmor = armor;
+        this.playerState.equippedArmor = armor;
+    }
+
+    _recalculatePlayerStats() {
+        const armorDef = this.playerState.equippedArmor ? ARMOR_DEFS[this.playerState.equippedArmor.defId] : null;
+        const nextMaxHp = (this.playerState.baseMaxHp || 100) + (armorDef?.maxHpBonus || 0);
+        this.playerState.maxHp = nextMaxHp;
+        this.playerState.hp = Math.min(this.playerState.hp, nextMaxHp);
     }
 
     _createItem(defId, type) {
@@ -75,8 +88,13 @@ export class InventoryManager {
             this.inventoryState.equippedShield = null;
             this.playerState.equippedShield = null;
         }
+        if (this.inventoryState.equippedArmor?.instanceId === instanceId) {
+            this.inventoryState.equippedArmor = null;
+            this.playerState.equippedArmor = null;
+        }
 
         this.inventoryState.items.splice(index, 1);
+        this._recalculatePlayerStats();
         return item;
     }
 
@@ -86,6 +104,9 @@ export class InventoryManager {
 
     isEquipped(instanceId) {
         if (this.inventoryState.equippedShield?.instanceId === instanceId) {
+            return true;
+        }
+        if (this.inventoryState.equippedArmor?.instanceId === instanceId) {
             return true;
         }
 
@@ -125,6 +146,18 @@ export class InventoryManager {
         return true;
     }
 
+    equipArmor(instanceId) {
+        const item = this.findItem(instanceId);
+        if (!item || item.type !== 'armor') {
+            return false;
+        }
+
+        this.inventoryState.equippedArmor = item;
+        this.playerState.equippedArmor = item;
+        this._recalculatePlayerStats();
+        return true;
+    }
+
     unequipSword(slotIndex) {
         if (slotIndex < 0 || slotIndex >= this.inventoryState.equippedSwords.length) {
             return false;
@@ -138,6 +171,13 @@ export class InventoryManager {
     unequipShield() {
         this.inventoryState.equippedShield = null;
         this.playerState.equippedShield = null;
+        return true;
+    }
+
+    unequipArmor() {
+        this.inventoryState.equippedArmor = null;
+        this.playerState.equippedArmor = null;
+        this._recalculatePlayerStats();
         return true;
     }
 }

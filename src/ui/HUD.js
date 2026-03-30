@@ -2,6 +2,7 @@ import { SceneType } from '../core/SceneManager.js';
 import { PixelText } from '../rendering/PixelText.js';
 import { SWORD_DEFS } from '../data/swords.js';
 import { SHIELD_DEFS } from '../data/shields.js';
+import { ARMOR_DEFS } from '../data/armors.js';
 import { StatusEffectSystem } from '../battle/StatusEffectSystem.js';
 
 export class HUD {
@@ -17,15 +18,16 @@ export class HUD {
         const swordA = player.equippedSwords[0] ? SWORD_DEFS[player.equippedSwords[0].defId] : null;
         const swordB = player.equippedSwords[1] ? SWORD_DEFS[player.equippedSwords[1].defId] : null;
         const shieldDef = player.equippedShield ? SHIELD_DEFS[player.equippedShield.defId] : null;
+        const armorDef = player.equippedArmor ? ARMOR_DEFS[player.equippedArmor.defId] : null;
         const statusEntries = StatusEffectSystem.getDisplayData(player);
 
         ctx.save();
         ctx.fillStyle = 'rgba(8, 12, 20, 0.76)';
-        ctx.fillRect(6, 6, 140, 42);
-        ctx.fillRect(152, 6, 162, 42);
+        ctx.fillRect(6, 6, 140, 52);
+        ctx.fillRect(152, 6, 162, 52);
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
-        ctx.strokeRect(6.5, 6.5, 139, 41);
-        ctx.strokeRect(152.5, 6.5, 161, 41);
+        ctx.strokeRect(6.5, 6.5, 139, 51);
+        ctx.strokeRect(152.5, 6.5, 161, 51);
 
         PixelText.draw(ctx, 'HP', 12, 11, { color: '#fff' });
         this._drawMeter(ctx, 28, 10, 70, 8, player.hp, player.maxHp, '#52c35a');
@@ -42,7 +44,11 @@ export class HUD {
         const shieldText = shieldDef
             ? `SH ${shieldDef.name} ${player.equippedShield.currentDurability}/${shieldDef.maxDurability}`
             : 'SH --';
+        const armorText = armorDef
+            ? `AR ${armorDef.name} +${armorDef.maxHpBonus}`
+            : 'AR --';
         PixelText.draw(ctx, this._fitLine(ctx, shieldText, 150), 158, 31, { color: '#fff' });
+        PixelText.draw(ctx, this._fitLine(ctx, armorText, 150), 158, 41, { color: '#fff' });
 
         this._drawStatusRow(ctx, statusEntries);
         ctx.restore();
@@ -54,7 +60,7 @@ export class HUD {
         }
 
         let x = 8;
-        const y = 52;
+        const y = 62;
         for (const entry of statusEntries.slice(0, 4)) {
             ctx.fillStyle = 'rgba(6, 10, 16, 0.88)';
             ctx.fillRect(x, y, 46, 12);

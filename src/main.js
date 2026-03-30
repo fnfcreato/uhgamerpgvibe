@@ -50,12 +50,14 @@ try {
     const rustyBlade = game.context.inventory.addItem('rusty_blade', 'sword');
     const swiftEdge = game.context.inventory.addItem('swift_edge', 'sword');
     const woodenGuard = game.context.inventory.addItem('wooden_guard', 'shield');
+    const paddedVest = game.context.inventory.addItem('padded_vest', 'armor');
     game.context.inventory.addItem('field_tonic', 'consumable');
     game.context.inventory.addItem('field_tonic', 'consumable');
 
     if (rustyBlade) game.context.inventory.equipSword(rustyBlade.instanceId, 0);
     if (swiftEdge) game.context.inventory.equipSword(swiftEdge.instanceId, 1);
     if (woodenGuard) game.context.inventory.equipShield(woodenGuard.instanceId);
+    if (paddedVest) game.context.inventory.equipArmor(paddedVest.instanceId);
 
     const exploration = new ExplorationScene(game.context);
     exploration.loadFromAreaManager('town_of_robloxia');

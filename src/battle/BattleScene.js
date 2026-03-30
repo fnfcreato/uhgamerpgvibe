@@ -162,7 +162,16 @@ export class BattleScene {
             this.flow.applyDodgeResult(0, 0);
             return;
         }
-        this.dodgeGame = new DodgeMiniGame(pattern, W / 2, H * 0.4);
+
+        const hpRatio = this.enemy.maxHp > 0 ? this.enemy.hp / this.enemy.maxHp : 1;
+        let speedMultiplier = 1;
+        if (hpRatio <= 0.25) {
+            speedMultiplier = 1.28;
+        } else if (hpRatio <= 0.5) {
+            speedMultiplier = 1.14;
+        }
+
+        this.dodgeGame = new DodgeMiniGame(pattern, W / 2, H * 0.4, { speedMultiplier });
     }
 
     _triggerShake() {

@@ -3,6 +3,7 @@ import { Button } from './Button.js';
 import { PixelText } from '../rendering/PixelText.js';
 import { SWORD_DEFS } from '../data/swords.js';
 import { SHIELD_DEFS } from '../data/shields.js';
+import { ARMOR_DEFS } from '../data/armors.js';
 import { CONSUMABLE_DEFS } from '../data/consumables.js';
 
 const LIST_X = 28;
@@ -28,7 +29,7 @@ export class InventoryUI {
             new Button(178, 108, 54, 14, 'USE', () => this._useSelectedItem()),
             new Button(238, 108, 54, 14, 'SLOT 1', () => this._equipSword(0)),
             new Button(178, 126, 54, 14, 'SLOT 2', () => this._equipSword(1)),
-            new Button(238, 126, 54, 14, 'SHIELD', () => this._equipShield()),
+            new Button(238, 126, 54, 14, 'EQUIP', () => this._equipSelectedGear()),
             new Button(178, 144, 54, 14, 'UNEQUIP', () => this._unequipSelected()),
             new Button(238, 144, 54, 14, 'BACK', () => this.context.scenes.pop()),
         ];
@@ -102,6 +103,10 @@ export class InventoryUI {
             const def = SHIELD_DEFS[item.defId];
             return `${def?.name || item.defId} ${item.currentDurability}/${def?.maxDurability || 0}${equipped}`;
         }
+        if (item.type === 'armor') {
+            const def = ARMOR_DEFS[item.defId];
+            return `${def?.name || item.defId}${equipped}`;
+        }
 
         const def = CONSUMABLE_DEFS[item.defId];
         return `${def?.name || item.defId}${equipped}`;
@@ -155,6 +160,23 @@ export class InventoryUI {
         this._afterInventoryChange('Shield equipped');
     }
 
+    _equipSelectedGear() {
+        const item = this._selectedItem;
+        if (!item || (item.type !== 'shield' && item.type !== 'armor')) {
+            this._showMessage('Select armor or shield');
+            return;
+        }
+
+        if (item.type === 'shield') {
+            this.context.inventory.equipShield(item.instanceId);
+            this._afterInventoryChange('Shield equipped');
+            return;
+        }
+
+        this.context.inventory.equipArmor(item.instanceId);
+        this._afterInventoryChange('Armor equipped');
+    }
+
     _unequipSelected() {
         const item = this._selectedItem;
         if (!item) {
@@ -175,6 +197,11 @@ export class InventoryUI {
             this.context.inventory.unequipShield();
             changed = true;
         }
+        const armor = this.context.state.inventory.equippedArmor;
+        if (armor?.instanceId === item.instanceId) {
+            this.context.inventory.unequipArmor();
+            changed = true;
+        }
 
         this._afterInventoryChange(changed ? 'Item unequipped' : 'Item is not equipped');
     }
@@ -190,13 +217,15 @@ export class InventoryUI {
         const item = this._selectedItem;
         const isSword = item?.type === 'sword';
         const isShield = item?.type === 'shield';
+        const isArmor = item?.type === 'armor';
         const isConsumable = item?.type === 'consumable';
         const isEquipped = item ? this.context.inventory.isEquipped(item.instanceId) : false;
 
         this.actionButtons[0].disabled = !isConsumable;
         this.actionButtons[1].disabled = !isSword;
         this.actionButtons[2].disabled = !isSword;
-        this.actionButtons[3].disabled = !isShield;
+        this.actionButtons[3].disabled = !(isShield || isArmor);
+        this.actionButtons[3].label = isArmor ? 'ARMOR' : 'SHIELD';
         this.actionButtons[4].disabled = !isEquipped;
         this.actionButtons[5].disabled = false;
     }
@@ -301,15 +330,17 @@ export class InventoryUI {
         const swordA = inv.equippedSwords[0] ? SWORD_DEFS[inv.equippedSwords[0].defId] : null;
         const swordB = inv.equippedSwords[1] ? SWORD_DEFS[inv.equippedSwords[1].defId] : null;
         const shield = inv.equippedShield ? SHIELD_DEFS[inv.equippedShield.defId] : null;
+        const armor = inv.equippedArmor ? ARMOR_DEFS[inv.equippedArmor.defId] : null;
 
         PixelText.draw(ctx, 'EQUIPPED', DETAIL_X, 34, { color: '#8fd3ff' });
         PixelText.draw(ctx, PixelText.fitText(ctx, `S1 ${swordA ? swordA.name : '--'}`, 112, { size: 8 }), DETAIL_X, 46, { color: '#fff' });
         PixelText.draw(ctx, PixelText.fitText(ctx, `S2 ${swordB ? swordB.name : '--'}`, 112, { size: 8 }), DETAIL_X, 56, { color: '#fff' });
+        PixelText.draw(ctx, PixelText.fitText(ctx, armor ? `AR ${armor.name} +${armor.maxHpBonus}` : 'AR --', 112, { size: 8 }), DETAIL_X, 66, { color: '#fff' });
         PixelText.draw(
             ctx,
             PixelText.fitText(ctx, shield ? `SH ${shield.name} ${inv.equippedShield.currentDurability}/${shield.maxDurability}` : 'SH --', 112, { size: 8 }),
             DETAIL_X,
-            66,
+            76,
             { color: '#fff' },
         );
     }
@@ -344,6 +375,21 @@ export class InventoryUI {
             PixelText.draw(ctx, item.currentDurability > 0 ? 'READY TO BLOCK' : 'BROKEN', DETAIL_X, 106, {
                 color: item.currentDurability > 0 ? '#fff' : '#ff8a6a',
             });
+            PixelText.drawParagraph(ctx, def.description || '', DETAIL_X, 118, {
+                color: '#c9d6df',
+                maxWidth: 114,
+                lineHeight: 9,
+                maxLines: 4,
+            });
+            return;
+        }
+
+        if (item.type === 'armor') {
+            const def = ARMOR_DEFS[item.defId];
+            PixelText.draw(ctx, def.name, DETAIL_X, 84, { color: '#8fd3ff' });
+            PixelText.draw(ctx, `HP +${def.maxHpBonus}`, DETAIL_X, 96, { color: '#fff' });
+            PixelText.draw(ctx, `RES ${Math.round((def.freezeResist || 0) * 100)}%`, DETAIL_X + 56, 96, { color: '#fff' });
+            PixelText.draw(ctx, 'Passive defense gear', DETAIL_X, 106, { color: '#fff' });
             PixelText.drawParagraph(ctx, def.description || '', DETAIL_X, 118, {
                 color: '#c9d6df',
                 maxWidth: 114,

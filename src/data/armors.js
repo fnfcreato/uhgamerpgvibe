@@ -1,0 +1,42 @@
+export const ARMOR_DEFS = {
+    padded_vest: {
+        id: 'padded_vest',
+        name: 'Padded Vest',
+        maxHpBonus: 12,
+        freezeResist: 0,
+        price: 70,
+        description: 'Simple layered cloth that gives a little extra breathing room in every fight.',
+    },
+    iron_mail: {
+        id: 'iron_mail',
+        name: 'Iron Mail',
+        maxHpBonus: 18,
+        freezeResist: 0,
+        price: 120,
+        description: 'Reliable chain armor for players who want steadier survivability without huge penalties.',
+    },
+    frostbound_coat: {
+        id: 'frostbound_coat',
+        name: 'Frostbound Coat',
+        maxHpBonus: 16,
+        freezeResist: 0.45,
+        price: 165,
+        description: 'An insulated coat that cuts down the chance of being frozen solid.',
+    },
+    knight_cuirass: {
+        id: 'knight_cuirass',
+        name: 'Knight Cuirass',
+        maxHpBonus: 24,
+        freezeResist: 0.1,
+        price: 210,
+        description: 'Heavy plated armor that adds a strong max-HP boost without turning the player into a tank machine.',
+    },
+    warded_plate: {
+        id: 'warded_plate',
+        name: 'Warded Plate',
+        maxHpBonus: 30,
+        freezeResist: 0.2,
+        price: 270,
+        description: 'Late-game armor with a large health bump and a little status resistance baked in.',
+    },
+};

@@ -4,6 +4,7 @@ import { PixelText } from '../rendering/PixelText.js';
 import { SHOP_DEFS } from '../data/shops.js';
 import { SWORD_DEFS } from '../data/swords.js';
 import { SHIELD_DEFS } from '../data/shields.js';
+import { ARMOR_DEFS } from '../data/armors.js';
 import { CONSUMABLE_DEFS } from '../data/consumables.js';
 
 const LIST_X = 28;
@@ -90,6 +91,7 @@ export class ShopUI {
 
     _getDef(entry) {
         if (entry?.type === 'shield') return SHIELD_DEFS[entry.defId];
+        if (entry?.type === 'armor') return ARMOR_DEFS[entry.defId];
         if (entry?.type === 'consumable') return CONSUMABLE_DEFS[entry.defId];
         return SWORD_DEFS[entry?.defId];
     }
@@ -310,6 +312,10 @@ export class ShopUI {
             PixelText.draw(ctx, `RED ${Math.round(def.reductionPercent * 100)}%`, DETAIL_X, 70, { color: '#fff' });
             PixelText.draw(ctx, `DUR ${def.maxDurability}`, DETAIL_X + 56, 70, { color: '#fff' });
             PixelText.draw(ctx, `FLAT ${def.flatReduction || 0}`, DETAIL_X, 82, { color: '#fff' });
+        } else if (entry.type === 'armor') {
+            PixelText.draw(ctx, `HP +${def.maxHpBonus}`, DETAIL_X, 70, { color: '#fff' });
+            PixelText.draw(ctx, `RES ${Math.round((def.freezeResist || 0) * 100)}%`, DETAIL_X + 56, 70, { color: '#fff' });
+            PixelText.draw(ctx, 'Passive defense gear', DETAIL_X, 82, { color: '#fff' });
         } else {
             PixelText.draw(ctx, `HEAL ${def.healAmount}`, DETAIL_X, 70, { color: '#fff' });
             PixelText.draw(ctx, 'ONE USE', DETAIL_X + 56, 70, { color: '#fff' });

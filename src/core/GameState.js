@@ -1,5 +1,6 @@
 export class PlayerState {
     constructor() {
+        this.baseMaxHp = 100;
         this.hp = 100;
         this.maxHp = 100;
         this.soulIntegrity = 100;
@@ -7,6 +8,7 @@ export class PlayerState {
         this.position = { x: 160, y: 90 };
         this.equippedSwords = [null, null];
         this.equippedShield = null;
+        this.equippedArmor = null;
         this.statusEffects = [];
     }
 }
@@ -16,6 +18,7 @@ export class InventoryState {
         this.items = [];
         this.equippedSwords = [null, null];
         this.equippedShield = null;
+        this.equippedArmor = null;
         this.capacity = 24;
     }
 }
@@ -42,7 +45,7 @@ export class SettingsState {
     constructor() {
         this.bgmVolume = 0.7;
         this.sfxVolume = 1.0;
-        this.saveVersion = 3;
+        this.saveVersion = 4;
     }
 }
 
