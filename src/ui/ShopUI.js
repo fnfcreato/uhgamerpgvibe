@@ -14,6 +14,17 @@ const ROW_H = 18;
 const VISIBLE_ROWS = 5;
 const DETAIL_X = 178;
 
+function normalizeGoldValue(value) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return Math.max(0, Math.floor(value));
+    }
+    if (typeof value === 'string') {
+        const match = value.match(/\d+/);
+        return match ? Number.parseInt(match[0], 10) : 0;
+    }
+    return 0;
+}
+
 export class ShopUI {
     constructor(context, shopId, options = {}) {
         this.type = SceneType.MODAL_OVERLAY;
@@ -39,6 +50,7 @@ export class ShopUI {
 
     onEnter() {
         this.context.input.setContext('menu');
+        this.context.state.player.gold = normalizeGoldValue(this.context.state.player.gold);
     }
 
     onExit() {
@@ -140,7 +152,9 @@ export class ShopUI {
         if (this.context.state.inventory.items.length >= this.context.state.inventory.capacity) {
             return false;
         }
-        return this.context.state.player.gold >= (def.price || 0);
+        const gold = normalizeGoldValue(this.context.state.player.gold);
+        this.context.state.player.gold = gold;
+        return gold >= (def.price || 0);
     }
 
     _buySelected() {
@@ -153,7 +167,9 @@ export class ShopUI {
             this._showMessage('Inventory full');
             return;
         }
-        if (this.context.state.player.gold < (def.price || 0)) {
+        const gold = normalizeGoldValue(this.context.state.player.gold);
+        this.context.state.player.gold = gold;
+        if (gold < (def.price || 0)) {
             this._showMessage('Not enough gold');
             return;
         }
@@ -164,7 +180,7 @@ export class ShopUI {
             return;
         }
 
-        this.context.state.player.gold -= def.price || 0;
+        this.context.state.player.gold = gold - (def.price || 0);
         this._syncButtons();
         this.context.audio.playSFX('loot');
         this._showMessage(`${def.name} purchased`);
@@ -182,12 +198,14 @@ export class ShopUI {
         }
 
         const cost = this._getRepairCost();
-        if (this.context.state.player.gold < cost) {
+        const gold = normalizeGoldValue(this.context.state.player.gold);
+        this.context.state.player.gold = gold;
+        if (gold < cost) {
             this._showMessage('Need more gold to repair');
             return;
         }
 
-        this.context.state.player.gold -= cost;
+        this.context.state.player.gold = gold - cost;
         target.shield.currentDurability = target.shieldDef.maxDurability;
         this._syncButtons();
         this.context.audio.playSFX('block');
@@ -265,7 +283,9 @@ export class ShopUI {
         ctx.strokeRect(16.5, 12.5, 287, 155);
 
         PixelText.draw(ctx, this.shop?.name || 'SHOP', 28, 20, { color: '#fff', weight: 'bold' });
-        PixelText.draw(ctx, `Gold ${this.context.state.player.gold}`, 292, 20, { color: '#ffd56a', align: 'right' });
+        const gold = normalizeGoldValue(this.context.state.player.gold);
+        this.context.state.player.gold = gold;
+        PixelText.draw(ctx, `Gold ${gold}`, 292, 20, { color: '#ffd56a', align: 'right' });
 
         for (const button of this.itemButtons) {
             button.draw(ctx);

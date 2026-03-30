@@ -5,6 +5,17 @@ import { SHIELD_DEFS } from '../data/shields.js';
 import { ARMOR_DEFS } from '../data/armors.js';
 import { StatusEffectSystem } from '../battle/StatusEffectSystem.js';
 
+function normalizeGoldValue(value) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return Math.max(0, Math.floor(value));
+    }
+    if (typeof value === 'string') {
+        const match = value.match(/\d+/);
+        return match ? Number.parseInt(match[0], 10) : 0;
+    }
+    return 0;
+}
+
 export class HUD {
     constructor(context) {
         this.type = SceneType.NON_MODAL_OVERLAY;
@@ -19,6 +30,8 @@ export class HUD {
         const swordB = player.equippedSwords[1] ? SWORD_DEFS[player.equippedSwords[1].defId] : null;
         const shieldDef = player.equippedShield ? SHIELD_DEFS[player.equippedShield.defId] : null;
         const armorDef = player.equippedArmor ? ARMOR_DEFS[player.equippedArmor.defId] : null;
+        const gold = normalizeGoldValue(player.gold);
+        player.gold = gold;
         const statusEntries = StatusEffectSystem.getDisplayData(player);
 
         ctx.save();
@@ -37,7 +50,7 @@ export class HUD {
         this._drawMeter(ctx, 40, 22, 58, 6, player.soulIntegrity, 100, '#4ac0ff');
         PixelText.draw(ctx, `${player.soulIntegrity}`, 136, 21, { color: '#fff', align: 'right' });
 
-        PixelText.draw(ctx, `G ${player.gold}`, 12, 33, { color: '#ffd56a' });
+        PixelText.draw(ctx, `G ${gold}`, 12, 33, { color: '#ffd56a' });
 
         PixelText.draw(ctx, this._fitLine(ctx, `S1 ${swordA ? swordA.name : '--'}`, 150), 158, 11, { color: '#fff' });
         PixelText.draw(ctx, this._fitLine(ctx, `S2 ${swordB ? swordB.name : '--'}`, 150), 158, 21, { color: '#fff' });

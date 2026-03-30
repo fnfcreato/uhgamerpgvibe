@@ -15,6 +15,32 @@ import { SWORD_DEFS } from '../data/swords.js';
 import { SHIELD_DEFS } from '../data/shields.js';
 import { CONSUMABLE_DEFS } from '../data/consumables.js';
 
+function normalizeGoldValue(value) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return Math.max(0, Math.floor(value));
+    }
+    if (typeof value === 'string') {
+        const match = value.match(/\d+/);
+        return match ? Number.parseInt(match[0], 10) : 0;
+    }
+    return 0;
+}
+
+function resolveGoldDrop(goldDrop) {
+    if (typeof goldDrop === 'number' && Number.isFinite(goldDrop)) {
+        return Math.max(0, Math.floor(goldDrop));
+    }
+    if (!goldDrop || typeof goldDrop !== 'object') {
+        return 0;
+    }
+
+    const min = Number.isFinite(goldDrop.min) ? Math.floor(goldDrop.min) : 0;
+    const max = Number.isFinite(goldDrop.max) ? Math.floor(goldDrop.max) : min;
+    const low = Math.min(min, max);
+    const high = Math.max(min, max);
+    return low + Math.floor(Math.random() * (high - low + 1));
+}
+
 export class ExplorationScene {
     constructor(context) {
         this.type = SceneType.FULLSCREEN;
@@ -510,9 +536,12 @@ export class ExplorationScene {
                 this.context.quests.markEnemyDefeated(enemy.spawnId);
 
                 const summaryLines = [];
-                if (enemy.def.goldDrop) {
-                    this.context.state.player.gold += enemy.def.goldDrop;
-                    summaryLines.push(`Gold +${enemy.def.goldDrop}`);
+                const goldReward = resolveGoldDrop(enemy.def.goldDrop);
+                if (goldReward > 0) {
+                    this.context.state.player.gold = normalizeGoldValue(this.context.state.player.gold) + goldReward;
+                    summaryLines.push(`Gold +${goldReward}`);
+                } else {
+                    this.context.state.player.gold = normalizeGoldValue(this.context.state.player.gold);
                 }
 
                 const soulGain = this._corruptionProfile ? 2 + this._corruptionProfile.level : 1;

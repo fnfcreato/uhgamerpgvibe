@@ -2,6 +2,17 @@ import { ARMOR_DEFS } from '../data/armors.js';
 
 const SAVE_KEY = 'sword_of_stability_save';
 
+function normalizeGoldValue(value) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return Math.max(0, Math.floor(value));
+    }
+    if (typeof value === 'string') {
+        const match = value.match(/\d+/);
+        return match ? Number.parseInt(match[0], 10) : 0;
+    }
+    return 0;
+}
+
 export class SaveManager {
     constructor(gameState) {
         this.gameState = gameState;
@@ -88,7 +99,7 @@ export class SaveManager {
         player.baseMaxHp = data.player?.baseMaxHp ?? player.baseMaxHp ?? 100;
         player.hp = data.player?.hp ?? player.hp;
         player.soulIntegrity = data.player?.soulIntegrity ?? player.soulIntegrity;
-        player.gold = data.player?.gold ?? player.gold;
+        player.gold = normalizeGoldValue(data.player?.gold ?? player.gold);
         player.position.x = data.player?.position?.x ?? player.position.x;
         player.position.y = data.player?.position?.y ?? player.position.y;
         player.statusEffects = (data.player?.statusEffects || []).map((effect) => ({ ...effect }));
